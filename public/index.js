@@ -1,5 +1,8 @@
 RTMP_url = 'rtmp://broadcast.api.video/s/30087931-229e-42cf-b5f9-e91bcc1f7332';
+live_url = 'https://embed.api.video/live/li400mYKSgQ6xs7taUeSaEKr';
+delegated_token = 'to1YSecZMRjrvDGxSfVFTNhG';
 window.onload  = function(){
+    console.log("loaded");
     //vod by default
     live = false; 
     //but we can change based on URL params
@@ -475,7 +478,9 @@ function startRecording() {
             state="start";
             //chunks.push(e.data);
           }
+          document.getElementById("video-information").innerHTML = "Live Stream available after 20s <a href="+live_url+">here</a>";
     }
+
     else{
         //if recording save to blob
         mediaRecorder.ondataavailable = handleDataAvailable;
@@ -564,7 +569,7 @@ function uploadTheVideo(){
     function uploadChunk(chunkForm, start, chunkEnd){
         var oReq = new XMLHttpRequest();
         oReq.upload.addEventListener("progress", updateProgress);	
-        const url ="https://sandbox.api.video/upload?token=to1YSecZMRjrvDGxSfVFTNhG";
+        const url ="https://sandbox.api.video/upload?token=" + delegated_token;
         oReq.open("POST", url, true);
         var blobEnd = chunkEnd-1;
         var contentRange = "bytes "+ start+"-"+ blobEnd+"/"+file.size;
@@ -613,7 +618,7 @@ function uploadTheVideo(){
     }
 }
 function connect_server(){
-   
+    
     if(!stream){fail('No getUserMedia() available.');}
     if(!MediaRecorder){fail('No MediaRecorder available.');}
 

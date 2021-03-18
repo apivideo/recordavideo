@@ -1,0 +1,12 @@
+[Unit]
+Description=record.a.video
+After=network.target
+
+[Service]
+Type=simple
+User=ubuntu
+ExecStart=/usr/bin/node src/index.js
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
