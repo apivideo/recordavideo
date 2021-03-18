@@ -1,0 +1,254 @@
+@font-face {
+    font-family: 'graphik-medium';
+    src: url("/Graphik-Medium.eot");
+    src: url("/Graphik-Medium.eot?#iefix") format("embedded-opentype"), url("/Graphik-Medium.woff2") format("woff2"), url("/Graphik-Medium.woff") format("woff"), url("/Graphik-Medium.ttf") format("truetype");
+    font-weight: normal;
+    font-style: normal;
+  }
+.graphik-medium, h1, h2, h3, body{
+    font-family: 'graphik-medium', sans-serif;
+}
+
+@media only screen and (min-width: 1200px) {
+   
+    #nav{
+        width: 33%;
+        float:left;
+    }
+    #canvas{
+        width: 66%;
+        float:right;
+        top: 30%;
+    }
+  }
+
+
+
+#title{
+    padding: 20px;
+    font-size:xx-large;
+    color: black;
+    width:100%;
+    text-align: center;
+
+}
+
+#form{
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 75%;
+    font-size: large;
+    text-align: center;
+    color: white;
+    border: 3px solid black;
+   
+   
+   
+}
+#liveOrStream{
+    padding: 10px;
+    height: 40px;
+
+}
+.live{
+    width: 40%;
+    float: left;
+    padding-top: 10px;
+    padding-right:20px; 
+    padding-bottom:10px;
+    color: black;
+    
+  
+   
+  }
+  .vod{
+    width: 40%;
+    float: right;
+    padding-top: 10px;
+    padding-right:20px; 
+    padding-bottom:10px;
+    color:black;
+  
+  
+  }
+  .liveActive{
+    width: 40%;
+    float: left;
+    padding-top: 10px;
+    padding-right:20px; 
+    padding-bottom:10px;   
+    color: rgb(250,101,48);
+    background-color: FEF3F0;
+  }
+  .vodActive{
+    width: 40%;
+    float: right;
+    padding-top: 10px;
+    padding-right:20px; 
+    padding-bottom:10px;
+    color:  rgb(250,101,48);;
+    background-color: FEF3F0;
+  }
+  .settingHeadings{
+    width:30%;
+    text-align:left;
+    font-size: x-large;
+    font-weight: bold;
+    color: black;
+    padding:10px;
+
+  } 
+  .settingSubHeadings{
+    width:100%;
+    text-align:left;
+    font-size: large;
+    font-weight: bold;
+    color: black;
+    padding:10px;
+
+  } 
+#devices{
+
+    color:black;
+    padding:20px;
+    float: left;
+}
+#mic{
+    display:flex;
+    align-items:center;
+
+}
+#cam{
+    display:flex;
+    align-items:center;
+
+}
+#audiopicker-select{
+   
+    height:40px;
+    width:70%;
+    font-size: x-large;
+    
+}
+#camerapicker-select{
+    height:40px;
+    width:70%;
+    font-size: x-large;
+    
+}
+#screens{
+    display:flex;
+    align-items:center;
+    text-align: center;
+    padding:20px;
+}
+#screenpicker-select{
+    height:40px;
+    width:70%;
+    font-size: x-large;
+    
+}
+#captions{
+    padding:20px;
+    display:flex;
+    align-items:center;
+}
+#captionspicker-select{
+    height:40px;
+    width:70%;
+    font-size: x-large;
+    
+}
+#buttons{
+    text-align: center;
+    padding:20px;
+
+}
+.start{
+    background-color: black;
+    font-size: x-large;
+    font-weight:bold;
+    color: white;
+    width: 95%;
+
+} 
+
+.modifyScreens{
+    width:45%;
+    background-color: orange;
+    font-size: x-large;
+    font-weight:bold;
+    color: white;
+    
+
+}
+#stop{
+    width: 45%;
+    background-color: red;
+    font-size: x-large;
+    font-weight:bold;
+    color: white;
+    display:none;
+
+}
+input[type=radio] {
+    border: 0px;
+    width: 2em;
+    height: 2em;
+}
+#videoCanvas{
+    padding: 20px;
+    width: 100%;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    top:50%;
+
+}
+
+#video{
+    width: 75%;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+   padding: 20px;
+    position:relative;
+   
+   }
+   #display {
+       width:45%;
+      float:left;
+   
+   }
+   #camera{
+       width:45%;
+        float:right;   
+   }
+   .nodisplay{
+        display:none;
+
+   }
+   .nocamera{
+       display:none;
+   }
+   .bigcamera{
+        width:100%;
+        height: 100%;
+        position:absolute;
+        top:0; 
+        left:0;
+   }
+   .cameraBottomLeft{
+    width:25%;
+    top: 72%;
+        left:0%;
+
+   }
+
+   .cameraBottomRight{
+    width:25%;
+    top: 72%;
+    left:72%;
+
+}

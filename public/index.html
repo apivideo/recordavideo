@@ -1,0 +1,100 @@
+<html>
+
+    <head>
+       
+        <link rel="stylesheet" href="style.css">
+        <script src="socket.io.min.js"></script>
+        <script src="index.js"></script>
+     
+    </head>
+
+
+    <body>
+
+    <!--framework fron https://developer.mozilla.org/en-US/docs/Web/API/Screen_Capture_API/Using_Screen_Capture -->
+    <div id="nav">
+        <div id="title">
+            <p>Livestream or record a video to share</p>
+        </div>
+        <div id="form">
+
+            <div id="liveOrStream">
+                <div id="live" class="live">
+                    <input type="radio" id="liveStream"  name="liveorvod" value="liveStream" style="display:none">
+                    GO LIVE
+                </div>
+                <div id="vodDiv" class="vod">
+                    <input type="radio" id="vod" class="vodActive" name="liveorvod" value="vod" checked style="display:none" >
+                    <label for="vod">Record & share</label> 
+                </div>
+            </div> 
+            <div class="settingHeadings">
+                Settings<br/>
+            </div>    
+            <div class="settingSubHeadings">
+                If no options: Press start, accept permissions, then refresh page<br/>
+            </div> 
+             <div id="devices">  
+                 <div id="mic">   
+                    <label for="audioPicker"><img src="mic.svg"></label> 
+                    <select name="audioPicker" id="audioPicker-select"> </select>
+                </div>
+                <div id = "cam">
+                    <label for="cameraPicker"><img src="camera.svg"></label> 
+                    <select name="cameraPicker" id="cameraPicker-select"> </select>
+                </div>
+            </div>  
+            <div class="settingHeadings">
+                Screen layout<br/>
+            </div>    
+            <div id="screens"> 
+                <img src="screenlayout.svg">
+                    <select name = "screen" id="screenpicker-select">
+                        <option id="screenOnly" value="screenOnly">Screen only</option>
+                        <option id="cameraOnly" value="cameraOnly">Camera only</option>
+                        <option id="bottomRight" value="bottomRight">Screen and camera (bottom right)</option>
+                        <option id="bottomLeft" value="bottomLeft">Screen and camera (bottom left)</option>
+
+                    </select>
+
+            </div> 
+            <div class="settingHeadings">
+                Captions<br/>
+            </div>
+            <div class="settingSubHeadings">
+                Only supported in Chrome<br/>
+            </div>        
+            <div id="captions"> 
+                <img src="captions.svg">
+                <select name = "captions" id="captionspicker-select">
+                    <option id="captionsTop" value="captionsTop">Captions (Top)</option>
+                    <option id="captionsBottom" value="captionsBottom">Captions (Bottom)</option>
+                    <option id="noCaptions" value="noCaptions">No captions</option>
+                </select>
+            </div>  
+            <div id="buttons">
+                <p><button id="start" class = "start">Start Capture</button>
+                <button id="stop">Stop Capture</button></p>
+            </div>  
+        </div>          
+
+    </div>
+    <div id="canvas">
+        <div id="video">
+            <div id="videoInputText" class="settingSubHeadings">
+               
+            </div> 
+            <video id="display"  autoplay></video>
+            <video id="camera"   autoplay></video>
+            <br>
+        </div>
+        <canvas id="videoCanvas">
+        </canvas>
+
+        <div id="video-information">  
+        </div>
+        <div id="chunk-information"></div>
+    </div>
+
+    </body>
+</html>

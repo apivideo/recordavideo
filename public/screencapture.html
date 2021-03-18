@@ -1,0 +1,628 @@
+<html>
+<head>
+    <link rel="stylesheet" href="/style.css">
+</head>
+
+<body>
+
+    <!--framework fron https://developer.mozilla.org/en-US/docs/Web/API/Screen_Capture_API/Using_Screen_Capture -->
+         <p>This example shows you the contents of the selected part of your display.
+        Click the Start Capture button to begin.</p>
+
+        
+        <p>  <label for="cameraWidth">Camera width</label> 
+            <input type="text" id="cameraWidth"  value="1280" >
+        </p>
+        <p>  <label for="cameraHeight">Camera width</label> 
+            <input type="text" id="cameraHeight"  value="720" >
+        </p>
+        <p>  <label for="cameraframerate">Camera framerate</label> 
+            <input type="text" id="cameraframerate"  value="25" >
+        </p>
+
+        
+        <label for="audioPicker">Pick which audio device to use</label> 
+        <select name="audioPicker" id="audioPicker-select"> </select>
+        <br/>
+        <label for="cameraPicker">Pick which camera to use</label> 
+        <select name="cameraPicker" id="cameraPicker-select"> </select>
+        
+        <p>
+        Screen layout
+        <div>
+            <input type="radio" id="screenOnly" name="screen" value="screenOnly" checked>
+            <label for="screenOnly"><img src="screen.png" width = "200px"></label> 
+
+            <input type="radio" id="cameraOnly" name="screen" value="cameraOnly" >
+            <label for="CameraOnly"><img src="camera.png" width = "200px"></label> 
+        </div>
+        <div>
+            <input type="radio" id="bottomRight" name="screen" value="bottomRight" >
+            <label for="bottomRight"><img src="bottomRight.png" width = "200px"></label> 
+
+            <input type="radio" id="bottomLeft" name="screen" value="bottomLeft" >
+            <label for="bottomLeft"><img src="bottomLeft.png" width = "200px"></label> 
+        </div>
+
+        Captions
+        <div id="captions">
+            <input type="radio" id="captionsTop" name="captions" value="captionsTop" checked>
+            <label for="captionsTop"><img src="captionsTop.png" width = "200px"></label> 
+
+            <input type="radio" id="captionsBottom" name="captions" value="captionsBottom" >
+            <label for="captionsBottom"><img src="captionsBottom.png" width = "200px"></label>
+
+            <input type="radio" id="noCaptions" name="captions" value="noCaptions" >
+            <label for="noCaptions"><img src="noCaptions.png" width = "200px"></label>  
+
+
+        </div>
+
+
+        <p><button id="start">Start Capture</button>&nbsp;<button id="stop">Stop Capture</button></p>
+        
+        <div id="video">
+            <video id="display"  autoplay></video>
+            <video id="camera"   autoplay></video>
+            <br>
+        </div>
+
+        <canvas id="videoCanvas">
+
+
+        </canvas>
+
+        <strong>Log:</strong>
+        <br>
+        <pre id="log"></pre>
+        <pre id = "captions"></pre>
+        <div id="video-information">
+          
+        </div>
+        <div id="chunk-information"></div>
+
+<script>
+
+    const videoElem = document.getElementById("display");
+    const cameraElem = document.getElementById("camera");
+    const logElem = document.getElementById("log");
+    const startElem = document.getElementById("start");
+    const stopElem = document.getElementById("stop");
+     screenShared = false;
+
+    //set up the recording canvas
+     canvas = document.getElementById("videoCanvas");
+     ctx = canvas.getContext("2d");
+     ctx.canvas.width = 1280;
+     ctx.canvas.height= 720;
+     cw = ctx.width;
+     ch = ctx.height;
+     //caption font and colour
+     ctx.font = "30px Arial";
+     ctx.fillStyle = "red";
+     ctx.textAlign = "center";
+  
+
+     //set xy coordinates for the screen and cameras
+     screenX0 = 0;
+     screenY0 = 0;
+     screenX1 = 1280;
+     screenY1= 720;
+
+     cameraX0 = 0;
+     cameraY0 = 0;
+     cameraX1 = 426;
+     cameraY1= 240;   
+
+
+
+    //size of the video view whre the screen is stored
+     screenWidth = 1280;
+     screenHeight = 720;
+    //set dimensions for captions 
+     var captionX = screenWidth/2;
+     var captionY = 50;   
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        
+    
+
+      // List cameras and microphones. in the menu
+       
+      navigator.mediaDevices.enumerateDevices()
+        .then(function(devices) {
+            devices.forEach(function(device) {
+                console.log(device.kind + ": " + device.label +" id = " + device.deviceId);
+                var audioSelect = document.getElementById("audioPicker-select");
+                var cameraSelect = document.getElementById("cameraPicker-select");
+                if(device.kind=="audioinput"){
+                    //add a select to the audio dropdown list
+                    var option = document.createElement("option");
+                    option.value = device.deviceId;
+                    option.text = device.label;
+                    audioSelect.appendChild(option);
+                }else if(device.kind =="videoinput"){
+                    //add a select to the camera dropdown list
+                    var option = document.createElement("option");
+                    option.value = device.deviceId;
+                    option.text = device.label;
+                    cameraSelect.appendChild(option);
+
+                }
+            });
+        })
+        .catch(function(err) {
+            console.log(err.name + ": " + err.message);
+        });
+
+    
+
+        //captioning function
+        //captionning
+        var interim_transcript = '';
+        var final_transcript = '';
+        var recognizing = false;
+        var ignore_onend;
+        var start_timestamp;
+        if (!('webkitSpeechRecognition' in window)) {
+        console.log("captions not supported in this browser!");
+        } else {
+        
+        var recognition = new webkitSpeechRecognition();
+        recognition.continuous = true;
+        recognition.interimResults = true;
+
+        recognition.onstart = function() {
+            recognizing = true;
+        };
+
+        recognition.onerror = function(event) {
+            console.log ("there was a caotioing error");
+        };
+
+        recognition.onend = function() {
+            console.log ("captioning stopped");
+            recognizing = false;
+            
+        };
+
+        recognition.onresult = function(event) {
+            //heres where I'd put where stuff goes in my app....
+
+            for (var i = event.resultIndex; i < event.results.length; ++i) {
+            if (event.results[i].isFinal) {
+                interim_transcript = "";
+                //bottom (i think)
+                //center of 
+                //ctx.fillText = ("", screenWidth/2, screenHeight/2);
+            } else {
+                
+                    //append the words
+                    interim_transcript = event.results[i][0].transcript;
+                
+                
+                console.log(interim_transcript);
+            }
+            }
+        };
+        }
+
+    //now lets capture the stream:
+    var mediaSource = new MediaSource();
+   
+    var mediaRecorder;
+    var recordedBlobs;
+    var sourceBuffer;
+    //capture stream at 25 fps
+    const stream = canvas.captureStream(25);
+
+
+    //stream.addTrack(cameraIn.getAudioTracks()[0]);
+    console.log('Got stream from canvas');
+    var options = {mimeType: 'video/webm;codecs=vp9', bitsPerSecond: 100000};
+       
+    //once the cameras and viewas are picked this will draw them on th canvas
+    //the timeout is for 20ms, so ~50 FPS updates on the canvas
+    function drawCanvas(screenIn, cameraIn,canvas){
+        var textLength = 60;
+        if(screenIn.paused || screenIn.ended) return false;
+       canvas.drawImage(screenIn, screenX0,screenY0, screenX1, screenY1);
+        canvas.drawImage(cameraIn, cameraX0, cameraY0, cameraX1, cameraY1);
+        
+        if(interim_transcript.length <textLength){
+            ctx.fillText(interim_transcript, captionX, captionY);
+        }
+        else{
+            ctx.fillText(interim_transcript.substring(0,textLength), captionX, captionY);
+            ctx.fillText(interim_transcript.substring(textLength,textLength*2), captionX, (captionY +45));
+            ctx.fillText(interim_transcript.substring(textLength*2,textLength*3), captionX, (captionY+90));
+        }
+        setTimeout(drawCanvas, 20,screenIn, cameraIn,canvas);
+
+    }
+    videoElem.addEventListener('play', function(){
+       console.log('video playing');
+
+        drawCanvas(videoElem, cameraElem,ctx);
+    },false);
+
+    // Set event listeners for the start and stop buttons
+    startElem.addEventListener("click", function(evt) {
+    startCapture();
+    }, false);
+
+    stopElem.addEventListener("click", function(evt) {
+    stopCapture();
+    }, false);
+
+/*
+    console.log = msg => logElem.innerHTML += `${msg}<br>`;
+    console.error = msg => logElem.innerHTML += `<span class="error">${msg}</span><br>`;
+    console.warn = msg => logElem.innerHTML += `<span class="warn">${msg}<span><br>`;
+    console.info = msg => logElem.innerHTML += `<span class="info">${msg}</span><br>`;
+
+*/
+
+
+    async function startCapture() {
+        logElem.innerHTML = "";
+        try {
+            //arrange the cameras/screens with CSS
+            if (document.getElementById('screenOnly').checked){
+                //no camera
+                //big screen
+                screenX0 = 0;
+                screenY0 = 0;
+                screenX1 = 1280;
+                screenY1= 720;
+
+                cameraX0 = 0;
+                cameraY0 = 0;
+                cameraX1 = 0;
+                cameraY1= 0;  
+
+            }else if (document.getElementById('cameraOnly').checked){
+                //big camera 
+                //no screen
+                screenX0 = 0;
+                screenY0 = 0;
+                screenX1 = 0;
+                screenY1= 0;
+
+                cameraX0 = 0;
+                cameraY0 = 0;
+                cameraX1 = 1280;
+                cameraY1= 720;  
+            
+            }else if (document.getElementById('bottomRight').checked){
+                //bottomr right camera
+                //big screen
+                screenX0 = 0;
+                screenY0 = 0;
+                screenX1 = 1280;
+                screenY1= 720;
+
+                cameraX0 = 830;
+                cameraY0 = 450;
+                cameraX1 = 426;
+                cameraY1= 240;  
+
+            }else {
+                //default bottom left camera
+                //big screen
+                screenX0 = 0;
+                screenY0 = 0;
+                screenX1 = 1280;
+                screenY1= 720;
+
+                cameraX0 = 20;
+                cameraY0 = 450;
+                cameraX1 = 426;
+                cameraY1= 240;  
+
+            }
+
+            //where do captions go?
+            if (document.getElementById('captionsTop').checked){
+                //captions at the top
+                captionX = screenWidth/2;
+                captionY = 50;   
+                startCaptions();
+
+            }else if(document.getElementById('captionsBottom').checked){
+                //captions at bottom
+                captionX = screenWidth/2;
+                //this will allow for 3 lines to appear
+                captionY = screenHeight-90;   
+                startCaptions();
+            }
+            //if no captions, we dont start captions.
+
+            function startCaptions() {
+                //start captioning
+
+                final_transcript = '';
+                //english, but change as desired.
+                recognition.lang = "en-GB";
+                recognition.start();
+            }
+        
+            //rebuild the screen options
+            //only thing is muting the audio
+            //this prevents awful feedback..
+            displayMediaOptions = {
+            video: {
+            },
+            audio: false
+            };
+            console.log(JSON.stringify(displayMediaOptions));
+
+            //camera
+            cameraW = document.getElementById("cameraWidth").value;
+            cameraH = document.getElementById("cameraHeight").value;
+            cameraFR= document.getElementById("cameraframerate").value;
+
+            //seelect the camera and the micrphone: 
+            var cameras = document.getElementById("cameraPicker-select");
+            var cameraId = cameras.options[cameras.selectedIndex].value;
+            var mics = document.getElementById("audioPicker-select");
+            var micId = mics.options[mics.selectedIndex].value;
+            //console.log("cameraid", cameraId);
+
+            navigator.getUserMedia = (navigator.mediaDevices.getUserMedia ||
+                            navigator.mediaDevices.mozGetUserMedia ||
+                            navigator.mediaDevices.msGetUserMedia ||
+                            navigator.mediaDevices.webkitGetUserMedia);
+
+            cameraMediaOptions = {
+                audio: false,
+                video:{
+                    deviceId: cameraId,
+                    width: { min: 100, ideal: cameraW, max: 1920 },
+                    height: { min: 100, ideal: cameraH, max: 1080 },
+                    frameRate: {ideal: cameraFR}
+                }
+            };
+            console.log(JSON.stringify(cameraMediaOptions));
+
+            //all settings in  - start the cameras screenshare
+            if(!screenShared){
+                //screen is not shared - so add it.
+                videoElem.srcObject = await navigator.mediaDevices.getDisplayMedia(displayMediaOptions);    
+                screenShared = true;
+            }
+            cameraStream = await navigator.mediaDevices.getUserMedia(cameraMediaOptions);
+            cameraElem.srcObject =cameraStream;
+
+            audioStreamOptions= {
+                audio: { 
+                    deviceId: micId,
+                        echoCancellation: true},
+                video:false
+            };
+
+            //grab the audio and ad it to the stream coming from the canvas
+            audioStream = await navigator.mediaDevices.getUserMedia(audioStreamOptions);
+            for (const track of audioStream.getTracks()) {
+                stream.addTrack(track);
+            }
+
+            //const audioContext = new AudioContext(); 
+        // audioIn = audioContext.createMediaStreamSource(cameraStream);
+        //audioStream.connect(stream);
+        dumpOptionsInfo();
+
+            //try capturing the stream
+        startRecording();
+
+
+        } catch(err) {
+            console.error("Error: " + err);
+        }
+    }
+    function stopCapture(evt) {
+
+        //screen stop
+        let tracks = videoElem.srcObject.getTracks();
+        console.log(JSON.stringify(tracks));
+        tracks.forEach(track => track.stop());
+        videoElem.srcObject = null;
+        screenShared = false;
+
+            //camera stop
+            let cameraTracks = cameraElem.srcObject.getTracks();
+        console.log(JSON.stringify(tracks));
+        tracks.forEach(cameraTracks => cameraTracks.stop());
+        cameraElem.srcObject = null;
+
+        //captions stop
+        recognition.stop();
+
+        //stop blob recording
+       uploadTheVideo();
+       download();
+        
+
+    }
+    function dumpOptionsInfo() {
+            const videoTrack = videoElem.srcObject.getVideoTracks()[0];
+
+            console.info("Track settings:");
+            console.info(JSON.stringify(videoTrack.getSettings(), null, 2));
+            console.info("Track constraints:");
+            console.info(JSON.stringify(videoTrack.getConstraints(), null, 2));
+    }
+       
+
+
+            //media recording from canvas functions
+        function startRecording() {
+
+
+
+            var options = {mimeType: 'video/webm;codecs=vp9', audioBitsPerSecond: 100000, videoBitsPerSecond: 1000000};
+            recordedBlobs = [];
+            try {
+                mediaRecorder = new MediaRecorder(stream, options);
+            } catch (e0) {
+                console.log('Unable to create MediaRecorder with options Object: ', options, e0);
+                try {
+                options = {mimeType: 'video/webm;codecs=vp8', bitsPerSecond: 100000};
+                mediaRecorder = new MediaRecorder(stream, options);
+                } catch (e1) {
+                console.log('Unable to create MediaRecorder with options Object: ', options, e1);
+                try {
+                    options = 'video/mp4';
+                    mediaRecorder = new MediaRecorder(stream, options);
+                } catch (e2) {
+                    alert('MediaRecorder is not supported by this browser.');
+                    console.error('Exception while creating MediaRecorder:', e2);
+                    return;
+                }
+                }
+            }
+            console.log('Created MediaRecorder', mediaRecorder, 'with options', options);
+            mediaRecorder.onstop = handleStop;
+            mediaRecorder.ondataavailable = handleDataAvailable;
+            mediaRecorder.start(10); // collect 10ms of data
+            console.log('MediaRecorder started', mediaRecorder);
+            }
+            function handleDataAvailable(event) {
+                if (event.data && event.data.size > 0) {
+                    recordedBlobs.push(event.data);
+                 }
+            }
+            function handleStop(event) {
+                console.log('Recorder stopped: ', event);
+                console.log('Recorded Blobs: ', recordedBlobs);
+                }
+
+            function stopRecording() {
+            mediaRecorder.stop();
+            recordedVideo.controls = true;
+            download();
+            }
+
+            function play() {
+            var type = (recordedBlobs[0] || {}).type;
+            var superBuffer = new Blob(recordedBlobs, {type});
+            recordedVideo.src = window.URL.createObjectURL(superBuffer);
+            }
+
+            function download() {
+            var blob = new Blob(recordedBlobs, {type: 'video/webm'});
+            var url = window.URL.createObjectURL(blob);
+            var a = document.createElement('a');
+            a.style.display = 'none';
+            a.href = url;
+            a.download = 'test.webm';
+            document.body.appendChild(a);
+            a.click();
+            setTimeout(function() {
+                document.body.removeChild(a);
+                window.URL.revokeObjectURL(url);
+            }, 100);
+            }
+
+            function uploadTheVideo(){
+                var chunkSize=1000000;
+                var blob = new Blob(recordedBlobs, {type: 'video/webm'});
+                var file=blob;
+                var numberofChunks = Math.ceil(file.size/chunkSize);
+                var filename = "browserVideo";
+                console.log("file size", blob.size +"  " + file.size);
+                document.getElementById("video-information").innerHTML = "There will be " + numberofChunks + " chunks uploaded."
+		        var start =0; 
+		        chunkCounter=0;
+		        videoId="";
+                var chunkEnd = start + chunkSize;
+                //upload the first chunk to get the videoId
+                createChunk(videoId, start);
+                
+                
+                
+                function createChunk(videoId, start, end){
+                    chunkCounter++;
+                    console.log("created chunk: ", chunkCounter);
+                    chunkEnd = Math.min(start + chunkSize , file.size );
+                    const chunk = file.slice(start, chunkEnd);
+                    console.log("i created a chunk of video" + start + "-" + chunkEnd + "minus 1	");
+                    const chunkForm = new FormData();
+                    if(videoId.length >0){
+                        //we have a videoId
+                        chunkForm.append('videoId', videoId);
+                        console.log("added videoId");	
+                        
+                    }
+                    //chunkForm.append('file', chunk);
+                    chunkForm.append('file', chunk, filename);
+                    console.log("added file");
+
+                    
+                    //created the chunk, now upload iit
+                    uploadChunk(chunkForm, start, chunkEnd);
+                }
+                
+                function uploadChunk(chunkForm, start, chunkEnd){
+                    var oReq = new XMLHttpRequest();
+                    oReq.upload.addEventListener("progress", updateProgress);	
+                    const url ="https://sandbox.api.video/upload?token=to1YSecZMRjrvDGxSfVFTNhG";
+                    oReq.open("POST", url, true);
+                    var blobEnd = chunkEnd-1;
+                    var contentRange = "bytes "+ start+"-"+ blobEnd+"/"+file.size;
+                    oReq.setRequestHeader("Content-Range",contentRange);
+                    console.log("Content-Range", contentRange);
+                    function updateProgress (oEvent) {
+                        if (oEvent.lengthComputable) {  
+                        var percentComplete = Math.round(oEvent.loaded / oEvent.total * 100);
+                        
+                        var totalPercentComplete = Math.round((chunkCounter -1)/numberofChunks*100 +percentComplete/numberofChunks);
+                        document.getElementById("chunk-information").innerHTML = "Chunk # " + chunkCounter + " is " + percentComplete + "% uploaded. Total uploaded: " + totalPercentComplete +"%";
+                    //	console.log (percentComplete);
+                        // ...
+                    } else {
+                        console.log ("not computable");
+                        // Unable to compute progress information since the total size is unknown
+                    }
+                    }
+                    oReq.onload = function (oEvent) {
+                                // Uploaded.
+                                    console.log("uploaded chunk" );
+                                    console.log("oReq.response", oReq.response);
+                                    var resp = JSON.parse(oReq.response)
+                                    videoId = resp.videoId;
+                                    //playerUrl = resp.assets.player;
+                                    console.log("videoId",videoId);
+                                    
+                                    //now we have the video ID - loop through and add the remaining chunks
+                                    //we start one chunk in, as we have uploaded the first one.
+                                    //next chunk starts at + chunkSize from start
+                                    start += chunkSize;	
+                                    //if start is smaller than file size - we have more to still upload
+                                    if(start<file.size){
+                                        //create the new chunk
+                                        createChunk(videoId, start);
+                                    }
+                                    else{
+                                        //the video is fully uploaded. there will now be a url in the response
+                                        playerUrl = resp.assets.player;
+                                        console.log("all uploaded! Watch here: ",playerUrl ) ;
+                                        document.getElementById("video-information").innerHTML = "all uploaded! Watch the video <a href=\'" + playerUrl +"\' target=\'_blank\'>here</a>" ;
+                                    }
+                                    
+                    };
+                    oReq.send(chunkForm);
+            
+                    
+                    
+                }
+
+
+            }
+
+
+</script>
+</body>
+
+
+</html>

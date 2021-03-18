@@ -1,0 +1,29 @@
+<!doctype html>  
+<html lang="en">  
+    <head>
+        <script src="socket.io.min.js"></script>
+    </head>
+    <body>
+        <h1>Hello World!</h1>
+        <div id="future"></div>
+        <form id="form" id="chat_form">
+            <input id="chat_input" type="text">
+            <input type="submit" value="Send">
+        </form>
+    
+       
+
+    </body>
+</html>
+<script>  
+var framerate =25;
+var audiobitrate=22;
+var socketOptions = {secure: true, reconnection: true, reconnectionDelay: 1000, timeout:15000, pingTimeout: 15000, pingInterval: 45000,query: {framespersecond: framerate, audioBitrate: audiobitrate}};
+		
+    var socket = io.connect('/', socketOptions);
+    
+    socket.on('connect', function(data) {
+        console.log("connected");
+       socket.emit('join', 'Hello World from client');
+    });
+</script>
