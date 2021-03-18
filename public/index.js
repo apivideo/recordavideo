@@ -1,4 +1,4 @@
-
+RTMP_url = 'rtmp://broadcast.api.video/s/30087931-229e-42cf-b5f9-e91bcc1f7332';
 window.onload  = function(){
     //vod by default
     live = false; 
@@ -12,8 +12,8 @@ window.onload  = function(){
     console.log("live setting", live);
 
     
-    RTMP_url = 'rtmp://broadcast.api.video/s/30087931-229e-42cf-b5f9-e91bcc1f7332';
-    //set all teh variables for the canvas and all the elements
+
+    //set all the variables for the canvas and all the elements
     
      videoElem = document.getElementById("display");
      cameraElem = document.getElementById("camera");
