@@ -2,7 +2,7 @@
   "name": "recordavideo",
   "version": "1.0.0",
   "description": "record an share a video",
-  "main": "src/index.js",
+  "main": "src/nodeindex.js",
   "scripts": {
     "start": "nodemon  src/nodeindex.js",
     "test": "echo \"Error: no test specified\" && exit 1"
