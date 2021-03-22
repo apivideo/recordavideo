@@ -4,26 +4,86 @@
         <script src="socket.io.min.js"></script>
     </head>
     <body>
-        <h1>Hello World!</h1>
-        <div id="future"></div>
-        <form id="form" id="chat_form">
-            <input id="chat_input" type="text">
-            <input type="submit" value="Send">
-        </form>
-    
+       hello
+        <video width="100%" id="video1" autoplay></video>
        
-
+        <video width="100%" id="video2" autoplay></video>
     </body>
 </html>
 <script>  
-var framerate =25;
-var audiobitrate=22;
-var socketOptions = {secure: true, reconnection: true, reconnectionDelay: 1000, timeout:15000, pingTimeout: 15000, pingInterval: 45000,query: {framespersecond: framerate, audioBitrate: audiobitrate}};
-		
-    var socket = io.connect('/', socketOptions);
-    
-    socket.on('connect', function(data) {
-        console.log("connected");
-       socket.emit('join', 'Hello World from client');
+             deviceIds= [];
+         deviceNames = [];
+         counter =0;
+    window.onload=function(){
+        startCameras();
+    };
+        
+async function startCameras(){
+
+    navigator.mediaDevices.enumerateDevices()
+    .then(function(devices) {
+        devices.forEach(function(device) {
+        console.log(device.kind + ": " + device.label +" id = " + device.deviceId);
+        
+            if(device.kind =="videoinput"){
+                //add a select to the camera dropdown list
+                var option = document.createElement("option");
+                deviceIds[counter] = (device.deviceId);
+                deviceNames[counter]= (device.label);
+                counter++;
+            }
     });
+            console.log("deviceIds", deviceIds);
+            console.log("deviceNames", deviceNames);
+            console.log(deviceNames.length);
+            cameraiterator=0;
+            if(deviceIds.length=3){
+                cameraiterator=1;
+            }
+            cameraW=1280;
+            cameraH=720;
+            cameraFR=25;
+            navigator.getUserMedia = (navigator.mediaDevices.getUserMedia ||
+                            navigator.mediaDevices.mozGetUserMedia ||
+                            navigator.mediaDevices.msGetUserMedia ||
+                            navigator.mediaDevices.webkitGetUserMedia);
+            var camera1Options = {
+                audio:false,
+                video:{
+                    deviceId: deviceIds[0],
+                    width: { min: 100, ideal: cameraW, max: 1920 },
+                    height: { min: 100, ideal: cameraH, max: 1080 },
+                    frameRate: {ideal: cameraFR}
+                }
+            };
+            var camera2Options = {
+                audio:false,
+                video:{
+                    deviceId: deviceIds[1],
+                    width: { min: 100, ideal: cameraW, max: 1920 },
+                    height: { min: 100, ideal: cameraH, max: 1080 },
+                    frameRate: {ideal: cameraFR}
+                }
+            };
+            console.log(camera1Options);
+            video1= document.getElementById("video1");
+            video2= document.getElementById("video2");
+           
+            navigator.mediaDevices.getUserMedia(camera1Options).then(function(stream1){
+                video1.srcObject=stream1;
+                navigator.mediaDevices.getUserMedia(camera2Options).then(function(stream2){
+                    video2.srcObject=stream2;
+                });
+            });
+        
+        
+    
+    })
+    .catch(function(err) {
+        console.log(err.name + ": " + err.message);
+    });
+}
+        
+
+
 </script>

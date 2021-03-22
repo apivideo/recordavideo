@@ -112,27 +112,27 @@ window.onload  = function(){
     createStream();
 
 
-//  click listeners for 'tabs'
-liveButtom = document.getElementById('live');
-vodButton = document.getElementById('vodDiv');
-//set the initial state
-if(!live){
-    vodButton.className="vodActive";
-} else{
-    initializeLiveStream();
-    liveButtom.className="liveActive";
-}
-liveButtom.addEventListener('click', function(){
-    initializeLiveStream();
-    
-});
-vodButton.addEventListener('click', function(){
-    document.getElementById("vod").checked = "true";
-    console.log("checking VOD radio");
-    live = false;
-    vodButton.className="vodActive";
-    liveButtom.className="live";
-});
+    //  click listeners for 'tabs'
+    liveButtom = document.getElementById('live');
+    vodButton = document.getElementById('vodDiv');
+    //set the initial state
+    if(!live){
+        vodButton.className="vodActive";
+    } else{
+        initializeLiveStream();
+        liveButtom.className="liveActive";
+    }
+    liveButtom.addEventListener('click', function(){
+        initializeLiveStream();
+        
+    });
+    vodButton.addEventListener('click', function(){
+        document.getElementById("vod").checked = "true";
+        console.log("checking VOD radio");
+        live = false;
+        vodButton.className="vodActive";
+        liveButtom.className="live";
+    });
 
 };
 
