@@ -28,6 +28,7 @@ window.onload  = function(){
     }
     if(cameraOnlyParam === "true"){
         cameraOnly = true;
+        console.log("cameraOnly set from url", cameraOnly);
     }
 
 
