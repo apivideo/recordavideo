@@ -406,7 +406,6 @@ async function startCapture() {
                 deviceId: cameraId,
                 width: { min: 100, ideal: cameraW, max: 1920 },
                 height: { min: 100, ideal: cameraH, max: 1080 },
-                aspectRatio: {exact: 1.777777778},
                 frameRate: {ideal: cameraFR}
             }
         };
@@ -414,10 +413,8 @@ async function startCapture() {
             audio: false,
             video:{
                 facingMode: "environment",
-
                 width: { min: 100, ideal: cameraW, max: 1920 },
-                height: { min: 100, ideal: cameraH, max: 1080 },
-                aspectRatio: {exact: 1.777777778}
+                height: { min: 100, ideal: cameraH, max: 1080 }
             }
         };
         console.log(JSON.stringify(cameraMediaOptions));
@@ -430,8 +427,11 @@ async function startCapture() {
             videoElem.srcObject = await navigator.mediaDevices.getDisplayMedia(displayMediaOptions);    
             screenShared = true;
             }else{
-                //screen cannot be shared, so grab the rear facing camera.
-            videoElem.srcObject = await navigator.mediaDevices.getUserMedia(cameraMediaOptions);    
+                //screen cannot be shared, so grab the front facing camera.
+            videoElem.srcObject = await navigator.mediaDevices.getUserMedia(cameraMediaOptions); 
+            //rotate the 2 views 90 degrees, as phones capture in portrait
+            videoelem.style.className = "rotated";
+               
             screenShared = true;
 
             }
