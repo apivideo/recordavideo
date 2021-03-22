@@ -219,13 +219,13 @@ input[type=radio] {
    }
    #display {
        width:45%;
-       height: calc(45vw * 1.77);
+       height: calc(45vw / 1.77);
       float:left;
    
    }
    #camera{
        width:45%;
-       height: calc(45vw * 1.77);
+       height: calc(45vw / 1.77);
         float:right;   
    }
    .nodisplay{
