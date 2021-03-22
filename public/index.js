@@ -30,9 +30,9 @@ window.onload  = function(){
     if(cameraOnlyParam === "true"){
         cameraOnly = true;
         console.log("cameraOnly set from url", cameraOnly);
-        document.getElementById("screenOnly").disabled = true;
-        document.getElementById("bottomRight").disabled = true;
-        document.getElementById("bottomLeft").disabled = true;
+        document.getElementById("screenOnly").options[0].disabled = true;
+        document.getElementById("bottomRight").options[1].disabled = true;
+        document.getElementById("bottomLeft").options[2].disabled = true;
     }
 
 
