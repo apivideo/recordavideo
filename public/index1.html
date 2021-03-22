@@ -27,7 +27,8 @@ async function startCameras(){
         
             if(device.kind =="videoinput"){
                 //add a select to the camera dropdown list
-                var option = document.createElement("option");
+              //  var option = document.createElement("option");
+              console.log(device);
                 deviceIds[counter] = (device.deviceId);
                 deviceNames[counter]= (device.label);
                 counter++;
@@ -37,6 +38,7 @@ async function startCameras(){
             console.log("deviceNames", deviceNames);
             console.log(deviceNames.length);
             cameraiterator=0;
+            console.log("deviceIds.length",deviceIds.length);
             if(deviceIds.length=3){
                 cameraiterator=1;
             }
@@ -50,7 +52,7 @@ async function startCameras(){
             var camera1Options = {
                 audio:false,
                 video:{
-                    deviceId: deviceIds[cameraiterator],
+                    deviceId: deviceIds[0],
                     width: { min: 100, ideal: cameraW, max: 1920 },
                     height: { min: 100, ideal: cameraH, max: 1080 },
                     frameRate: {ideal: cameraFR}
@@ -59,7 +61,7 @@ async function startCameras(){
             var camera2Options = {
                 audio:false,
                 video:{
-                    deviceId: deviceIds[cameraiterator+1],
+                    deviceId: deviceIds[1],
                     width: { min: 100, ideal: cameraW, max: 1920 },
                     height: { min: 100, ideal: cameraH, max: 1080 },
                     frameRate: {ideal: cameraFR}

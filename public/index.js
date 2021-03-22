@@ -30,6 +30,7 @@ window.onload  = function(){
     if(cameraOnlyParam === "true"){
         cameraOnly = true;
         console.log("cameraOnly set from url", cameraOnly);
+        document.getElementById("screens").innerHTML = "On Mobile, only the camera can be shared."
     }
 
 
@@ -289,6 +290,9 @@ async function startCapture() {
 
         //arrange the cameras/screens with CSS
         var screenLayout= document.getElementById("screenpicker-select").value;
+        if(cameraOnly){
+            screenLayout = 'cameraOnly';
+        }
         console.log("screenLayout", screenLayout);
 
         if (screenLayout === 'screenOnly'){
