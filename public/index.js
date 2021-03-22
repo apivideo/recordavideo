@@ -30,7 +30,9 @@ window.onload  = function(){
     if(cameraOnlyParam === "true"){
         cameraOnly = true;
         console.log("cameraOnly set from url", cameraOnly);
-        document.getElementById("screens").innerHTML = "On Mobile, only the camera can be shared."
+        document.getElementById("screenOnly").disabled = true;
+        document.getElementById("bottomRight").disabled = true;
+        document.getElementById("bottomLeft").disabled = true;
     }
 
 
