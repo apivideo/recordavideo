@@ -93,9 +93,11 @@ window.onload  = function(){
             screenCapture = false;
         }
         //we can override the screenCapture with the 2camera parameter
+        console.log("twoCamera", twoCamera);
         if(twoCamera){
             //by making screen capture false, we enable 2 camera mode
             screenCapture = false;
+            console.log("screen capture off due to 2camera setting");
         }
     
 
@@ -411,6 +413,7 @@ async function startCapture() {
             audio: false,
             video:{
                 facingMode: "environment",
+
                 width: { min: 100, ideal: cameraW, max: 1920 },
                 height: { min: 100, ideal: cameraH, max: 1080 }
             }
