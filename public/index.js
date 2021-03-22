@@ -253,13 +253,8 @@ function createStream(){
     }
     videoElem.addEventListener('play', function(){
        console.log('video playing');
-        if (screenCapture){
-            //screen capture is supported
+            //draw the 2 streams to the canvas
             drawCanvas(videoElem, cameraElem,ctx);
-        }else{
-            //no screen capture (Android Chrome)
-            drawCanvas(cameraElem, cameraElem,ctx);
-        }
     },false);
 
     // Set event listeners for the start and stop buttons
