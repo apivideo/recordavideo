@@ -9,17 +9,17 @@ window.onload  = function(){
     //vod by default
     live = false; 
     //by default, screensahring
-    twoCamera = false;
+    cameraOnly = false;
     //but we can change based on URL params
     const queryString = window.location.search;
     const urlParams = new URLSearchParams(queryString);
     const liveURLParam = urlParams.get('live');
-    const twoCameraParam = urlParams.get('2camera');
+    const cameraOnlyParam = urlParams.get('cameraOnly');
     if(liveURLParam === "true"){
         live= true;
     }
-    if(twoCameraParam === "true"){
-        twoCamera = true;
+    if(cameraOnlyParam === "true"){
+        cameraOnly = true;
     }
     console.log("live setting", live);
 
@@ -40,8 +40,15 @@ window.onload  = function(){
         //set up the recording canvas
          canvas = document.getElementById("videoCanvas");
          ctx = canvas.getContext("2d");
-         ctx.canvas.width = 1280;
-         ctx.canvas.height= 720;
+
+         if(cameraOnly){
+             //record in portrait
+             ctx.canvas.width = 720;
+             ctx.canvas.height= 1280;
+         }else{
+             ctx.canvas.width = 1280;
+            ctx.canvas.height= 720;
+         }
          cw = ctx.width;
          ch = ctx.height;
          //caption font and colour
@@ -93,11 +100,11 @@ window.onload  = function(){
             screenCapture = false;
         }
         //we can override the screenCapture with the 2camera parameter
-        console.log("twoCamera", twoCamera);
-        if(twoCamera){
+        console.log("cameraOnly", cameraOnly);
+        if(cameraOnly){
             //by making screen capture false, we enable 2 camera mode
             screenCapture = false;
-            console.log("screen capture off due to 2camera setting");
+            console.log("screen capture off due to cameraOnly setting");
         }
     
 
@@ -429,9 +436,6 @@ async function startCapture() {
             }else{
                 //screen cannot be shared, so grab the front facing camera.
             videoElem.srcObject = await navigator.mediaDevices.getUserMedia(cameraMediaOptions); 
-            //rotate the 2 views 90 degrees, as phones capture in portrait
-            videoelem.style.className = "rotated";
-               
             screenShared = true;
 
             }
