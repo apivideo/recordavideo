@@ -406,6 +406,7 @@ async function startCapture() {
                 deviceId: cameraId,
                 width: { min: 100, ideal: cameraW, max: 1920 },
                 height: { min: 100, ideal: cameraH, max: 1080 },
+                aspectRatio: 1.777777778,
                 frameRate: {ideal: cameraFR}
             }
         };
@@ -415,7 +416,8 @@ async function startCapture() {
                 facingMode: "environment",
 
                 width: { min: 100, ideal: cameraW, max: 1920 },
-                height: { min: 100, ideal: cameraH, max: 1080 }
+                height: { min: 100, ideal: cameraH, max: 1080 },
+                aspectRatio: 1.777777778
             }
         };
         console.log(JSON.stringify(cameraMediaOptions));
