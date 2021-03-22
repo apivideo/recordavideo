@@ -50,7 +50,7 @@ async function startCameras(){
             var camera1Options = {
                 audio:false,
                 video:{
-                    deviceId: deviceIds[0],
+                    deviceId: deviceIds[cameraiterator],
                     width: { min: 100, ideal: cameraW, max: 1920 },
                     height: { min: 100, ideal: cameraH, max: 1080 },
                     frameRate: {ideal: cameraFR}
@@ -59,7 +59,7 @@ async function startCameras(){
             var camera2Options = {
                 audio:false,
                 video:{
-                    deviceId: deviceIds[1],
+                    deviceId: deviceIds[cameraiterator+1],
                     width: { min: 100, ideal: cameraW, max: 1920 },
                     height: { min: 100, ideal: cameraH, max: 1080 },
                     frameRate: {ideal: cameraFR}
