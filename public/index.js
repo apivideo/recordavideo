@@ -69,19 +69,19 @@ window.onload  = function(){
          //set xy coordinates for the screen and cameras
          screenX0 = 0;
          screenY0 = 0;
-         screenX1 = 1280;
-         screenY1= 720;
+         screenX1 = ctx.canvas.width;
+         screenY1= ctx.canvas.height;
     
          cameraX0 = 0;
          cameraY0 = 0;
-         cameraX1 = 426;
-         cameraY1= 240;   
+         cameraX1 = ctx.canvas.width/3;
+         cameraY1= ctx.canvas.height/3;   
     
     
     
         //size of the video view whre the screen is stored
-         screenWidth = 1280;
-         screenHeight = 720;
+         screenWidth = ctx.canvas.width;
+         screenHeight = ctx.canvas.height;
         //set dimensions for captions 
          var captionX = screenWidth/2;
          var captionY = 50;   
