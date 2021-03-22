@@ -429,7 +429,7 @@ async function startCapture() {
             screenShared = true;
             }else{
                 //screen cannot be shared, so grab the rear facing camera.
-            videoElem.srcObject = await navigator.mediaDevices.getUserMedia(rearCameraMediaOptions);    
+            videoElem.srcObject = await navigator.mediaDevices.getUserMedia(cameraMediaOptions);    
             screenShared = true;
 
             }
