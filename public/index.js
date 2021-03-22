@@ -49,8 +49,8 @@ window.onload  = function(){
          if(cameraOnly){
              //record in portrait
              console.log("portrait canvas");
-             ctx.canvas.width = 720;
-             ctx.canvas.height= 1280;
+             ctx.canvas.width = 1280;
+             ctx.canvas.height= 720;
              cameraW = 720;
              cameraH = 1280;
              cameraFR= 25;
