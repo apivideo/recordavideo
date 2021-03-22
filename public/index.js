@@ -8,12 +8,18 @@ window.onload  = function(){
 
     //vod by default
     live = false; 
+    //by default, screensahring
+    twoCamera = false;
     //but we can change based on URL params
     const queryString = window.location.search;
     const urlParams = new URLSearchParams(queryString);
     const liveURLParam = urlParams.get('live');
+    const twoCameraParam = urlParams.get('2camera');
     if(liveURLParam === "true"){
         live= true;
+    }
+    if(twoCameraParam === "true"){
+        twoCamera = true;
     }
     console.log("live setting", live);
 
@@ -86,9 +92,11 @@ window.onload  = function(){
             console.log("screen capture NOT supported");
             screenCapture = false;
         }
-        
-        //testing "mobile"
-        //screenCapture = false;
+        //we can override the screenCapture with the 2camera parameter
+        if(twoCamera){
+            //by making screen capture false, we enable 2 camera mode
+            screenCapture = false;
+        }
     
 
     //get cameras and mics
@@ -235,7 +243,6 @@ function createStream(){
     //the timeout is for 20ms, so ~50 FPS updates on the canvas
     function drawCanvas(screenIn, cameraIn,canvas){
         var textLength = 60;
-  //      if(screenIn.paused || screenIn.ended) return false;
         canvas.drawImage(screenIn, screenX0,screenY0, screenX1, screenY1);
         canvas.drawImage(cameraIn, cameraX0, cameraY0, cameraX1, cameraY1);
        //write transcript on the screen
@@ -405,8 +412,7 @@ async function startCapture() {
             video:{
                 facingMode: "environment",
                 width: { min: 100, ideal: cameraW, max: 1920 },
-                height: { min: 100, ideal: cameraH, max: 1080 },
-                frameRate: {ideal: cameraFR}
+                height: { min: 100, ideal: cameraH, max: 1080 }
             }
         };
         console.log(JSON.stringify(cameraMediaOptions));
