@@ -25,6 +25,7 @@ window.onload  = function(){
     const cameraOnlyParam = urlParams.get('cameraOnly');
     if(liveURLParam === "true"){
         live= true;
+        console.log("live set from url", live);
     }
     if(cameraOnlyParam === "true"){
         cameraOnly = true;
@@ -56,7 +57,7 @@ window.onload  = function(){
              cameraH = 1280;
              cameraFR= 25;
          }else{
-             ctx.canvas.width = 1280;
+            ctx.canvas.width = 1280;
             ctx.canvas.height= 720;
          }
          cw = ctx.width;
