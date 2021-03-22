@@ -283,10 +283,16 @@ function createStream(){
 async function startCapture() {
     try {
         //change buttons
-        stopElem.style.display = "inline";
-        startElem.className = "modifyScreens";
-        startElem.innerHTML = "Change layout";
-
+        if(live){
+            stopElem.className ="stopLive";
+            stopElem.style.display = "inline";
+            startElem.style.display = "none";
+        }
+        else{
+            stopElem.style.display = "inline";
+            startElem.className = "modifyScreens";
+            startElem.innerHTML = "Change layout";
+        }
         //add text for the 2 screens
         document.getElementById("videoInputText").innerHTML = "Screen and camera inputs";
 
@@ -480,15 +486,16 @@ function stopCapture(evt) {
     //FIX BUTTONS
            //change buttons
            if(live){
+           
             startElem.className = "start";
             startElem.innerHTML = "Reload to stream again";
             startElem.disabled = true;
-
+            socket.close();
         }else{
             startElem.className = "start";
             startElem.innerHTML = "Start";
         }
-
+        startElem.style.display = "inline";
        stopElem.style.display = "none";
        document.getElementById("videoInputText").innerHTML="";
     //screen stop
@@ -545,7 +552,7 @@ function startRecording() {
         console.log("mime", mediaRecorder.mimeType);
         socket.emit("config_vcodec", mediaRecorder.mimeType);
         mediaRecorder.ondataavailable = function(e) {
-            console.log("e", e.data);
+           // console.log("e", e.data);
             socket.emit("binarystream",e.data);
             state="start";
             //chunks.push(e.data);
@@ -558,7 +565,7 @@ function startRecording() {
         console.log("saving blob");
         mediaRecorder.ondataavailable = handleDataAvailable;
     }
-    mediaRecorder.start(1000); // collect 10ms of data
+    mediaRecorder.start(10); // collect 10ms of data
     console.log('MediaRecorder started', mediaRecorder);
 }
 
@@ -746,6 +753,8 @@ function connect_server(){
     socket.on('ffmpeg_stderr',function(m){
         //this is the ffmpeg output for each frame
         console.log('FFMPEG:'+m);	
+       
+
     });
 
     socket.on('disconnect', function (reason) {

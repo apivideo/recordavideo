@@ -183,8 +183,19 @@
     
 
 }
-#stop{
+.stop{
+   
     width: 45%;
+    background-color: red;
+    font-size: x-large;
+    font-weight:bold;
+    color: white;
+    display:none;
+
+}
+.stopLive{
+    
+    width: 95%;
     background-color: red;
     font-size: x-large;
     font-weight:bold;
