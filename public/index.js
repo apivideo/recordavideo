@@ -399,15 +399,23 @@ async function startCapture() {
                         navigator.mediaDevices.mozGetUserMedia ||
                         navigator.mediaDevices.msGetUserMedia ||
                         navigator.mediaDevices.webkitGetUserMedia);
-
-        cameraMediaOptions = {
-            audio: false,
-            video:{
-                deviceId: cameraId,
+        var videoOptions = {
+            deviceId: cameraId,
+            width: { min: 100, ideal: cameraW, max: 1920 },
+            height: { min: 100, ideal: cameraH, max: 1080 },
+            frameRate: {ideal: cameraFR}
+        };
+        if(!screenCapture){
+            videoOptions = {
+                facingMode: "user",
                 width: { min: 100, ideal: cameraW, max: 1920 },
                 height: { min: 100, ideal: cameraH, max: 1080 },
                 frameRate: {ideal: cameraFR}
-            }
+            };
+        }
+        cameraMediaOptions = {
+            audio: false,
+            video: videoOptions
         };
         rearCameraMediaOptions = {
             audio: false,
@@ -428,7 +436,7 @@ async function startCapture() {
             screenShared = true;
             }else{
                 //screen cannot be shared, so grab the front facing camera.
-            videoElem.srcObject = await navigator.mediaDevices.getUserMedia(cameraMediaOptions); 
+            videoElem.srcObject = await navigator.mediaDevices.getUserMedia(rearCameraMediaOptions); 
             screenShared = true;
 
             }
