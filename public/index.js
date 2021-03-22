@@ -1,15 +1,23 @@
 RTMP_url = 'rtmp://broadcast.api.video/s/30087931-229e-42cf-b5f9-e91bcc1f7332';
 live_url = 'https://embed.api.video/live/li400mYKSgQ6xs7taUeSaEKr';
 delegated_token = 'to1YSecZMRjrvDGxSfVFTNhG';
+//page defaults
+//vod by default, but we can make the page default to live.
+live = false; 
+//by default, screensahring
+cameraOnly = false;
+
 window.onload  = function(){
     console.log("loaded");
+    // is this a mobile device - no screen share - and 2 cameras?
+    //see if screen capture is supported
+    if("getDisplayMedia" in navigator.mediaDevices){
+        console.log("screen capture supported");
+    }else{
+        console.log("screen capture NOT supported");
+        cameraOnly = true;
+    }
 
-
-
-    //vod by default
-    live = false; 
-    //by default, screensahring
-    cameraOnly = false;
     //but we can change based on URL params
     const queryString = window.location.search;
     const urlParams = new URLSearchParams(queryString);
@@ -20,21 +28,10 @@ window.onload  = function(){
     }
     if(cameraOnlyParam === "true"){
         cameraOnly = true;
-        screenCapture = false;
     }
-    screenCapture = true;
-    //see if screen capture is supported
-    if("getDisplayMedia" in navigator.mediaDevices){
-        console.log("screen capture supported");
-    }else{
-        console.log("screen capture NOT supported");
-        screenCapture = false;
-        cameraOnly = true;
-    }
-   
+
 
     //set all the variables for the canvas and all the elements
-    
      videoElem = document.getElementById("display");
      cameraElem = document.getElementById("camera");
      startElem = document.getElementById("start");
@@ -54,6 +51,9 @@ window.onload  = function(){
              console.log("portrait canvas");
              ctx.canvas.width = 720;
              ctx.canvas.height= 1280;
+             cameraW = 720;
+             cameraH = 1280;
+             cameraFR= 25;
          }else{
              ctx.canvas.width = 1280;
             ctx.canvas.height= 720;
@@ -294,8 +294,8 @@ async function startCapture() {
             //big screen
             screenX0 = 0;
             screenY0 = 0;
-            screenX1 = 1280;
-            screenY1= 720;
+            screenX1 = ctx.canvas.width;
+            screenY1= ctx.canvas.height;
 
             cameraX0 = 0;
             cameraY0 = 0;
@@ -312,34 +312,34 @@ async function startCapture() {
 
             cameraX0 = 0;
             cameraY0 = 0;
-            cameraX1 = 1280;
-            cameraY1= 720;  
+            cameraX1 = ctx.canvas.width;
+            cameraY1= ctx.canvas.height;  
         
         }else if (screenLayout === 'bottomRight'){
             //bottomr right camera
             //big screen
             screenX0 = 0;
             screenY0 = 0;
-            screenX1 = 1280;
-            screenY1= 720;
+            screenX1 = ctx.canvas.width;
+            screenY1= ctx.canvas.height;
 
-            cameraX0 = 830;
-            cameraY0 = 450;
-            cameraX1 = 426;
-            cameraY1= 240;  
+            cameraX0 = .625*ctx.canvas.width;
+            cameraY0 = .625*ctx.canvas.height;
+            cameraX1 = ctx.canvas.width/3;
+            cameraY1= ctx.canvas.height/3;  
 
         }else {
             //default bottom left camera
             //big screen
             screenX0 = 0;
             screenY0 = 0;
-            screenX1 = 1280;
-            screenY1= 720;
+            screenX1 = ctx.canvas.width;
+            screenY1= ctx.canvas.height;
 
             cameraX0 = 20;
-            cameraY0 = 450;
-            cameraX1 = 426;
-            cameraY1= 240;  
+            cameraY0 = .625*ctx.canvas.height;
+            cameraX1 = ctx.canvas.width/3;
+            cameraY1= ctx.canvas.height/3;  
 
         }
 
@@ -405,7 +405,7 @@ async function startCapture() {
             height: { min: 100, ideal: cameraH, max: 1080 },
             frameRate: {ideal: cameraFR}
         };
-        if(!screenCapture){
+        if(cameraOnly){
             videoOptions = {
                 facingMode: "user",
                 width: { min: 100, ideal: cameraW, max: 1920 },
@@ -430,8 +430,8 @@ async function startCapture() {
         //all settings in  - start the cameras screenshare
         if(!screenShared ){
 
-            if(screenCapture){
-            //screen can be shared, but screen is not shared - so add it.
+            if(!cameraOnly){
+            //share the screen - it has not been shared yet!
             videoElem.srcObject = await navigator.mediaDevices.getDisplayMedia(displayMediaOptions);    
             screenShared = true;
             }else{
