@@ -209,6 +209,7 @@ input[type=radio] {
 
 #video{
     width: 75%;
+    height: width/1.77;
     display: block;
     margin-left: auto;
     margin-right: auto;
@@ -218,11 +219,13 @@ input[type=radio] {
    }
    #display {
        width:45%;
+       height: calc(45vw * 1.77)
       float:left;
    
    }
    #camera{
        width:45%;
+       height: calc(45vw * 1.77)
         float:right;   
    }
    .nodisplay{
