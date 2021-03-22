@@ -3,6 +3,9 @@ live_url = 'https://embed.api.video/live/li400mYKSgQ6xs7taUeSaEKr';
 delegated_token = 'to1YSecZMRjrvDGxSfVFTNhG';
 window.onload  = function(){
     console.log("loaded");
+
+
+
     //vod by default
     live = false; 
     //but we can change based on URL params
@@ -14,7 +17,7 @@ window.onload  = function(){
     }
     console.log("live setting", live);
 
-    
+
 
     //set all the variables for the canvas and all the elements
     
@@ -22,6 +25,7 @@ window.onload  = function(){
      cameraElem = document.getElementById("camera");
      startElem = document.getElementById("start");
      stopElem = document.getElementById("stop");
+     captionRecord = true;
      screenShared = false;
       //camera
       cameraW = 1280;
@@ -64,9 +68,27 @@ window.onload  = function(){
             
         //captionning
         interim_transcript = '';
-         recognition = new webkitSpeechRecognition();
-    
-    
+      
+        if('webkitSpeechRecognition' in window){
+            console.log("speech recognition supported");
+            recognition = new webkitSpeechRecognition();
+        }else{
+            console.log("speech recognition not supported");
+            captionRecord = false;
+        }
+        console.log("captionRecord", captionRecord);
+
+        screenCapture = true;
+        //see if screen capture is supported
+        if("getDisplayMedia" in navigator.mediaDevices){
+            console.log("screen capture supported");
+        }else{
+            console.log("screen capture NOT supported");
+            screenCapture = false;
+        }
+        
+        //testing "mobile"
+        //screenCapture = false;
     
 
     //get cameras and mics
@@ -156,42 +178,42 @@ function captioning(){
         var recognizing = false;
         var ignore_onend;
         var start_timestamp;
-        if (!('webkitSpeechRecognition' in window)) {
+        if (!captionRecord) {
         console.log("captions not supported in this browser!");
         } else {
         
-        
-        recognition.continuous = true;
-        recognition.interimResults = true;
+            console.log("setting caption recognitions");
+            recognition.continuous = true;
+            recognition.interimResults = true;
 
-        recognition.onstart = function() {
-            recognizing = true;
-        };
+            recognition.onstart = function() {
+                recognizing = true;
+            };
 
-        recognition.onerror = function(event) {
-            console.log ("there was a caotioing error");
-        };
+            recognition.onerror = function(event) {
+                console.log ("there was a caotioing error");
+            };
 
-        recognition.onend = function() {
-            console.log ("captioning stopped");
-            recognizing = false;
-            
-        };
+            recognition.onend = function() {
+                console.log ("captioning stopped");
+                recognizing = false;
+                
+            };
 
-        recognition.onresult = function(event) {
-            //heres where I'd put where stuff goes in my app....
+            recognition.onresult = function(event) {
+                //heres where I'd put where stuff goes in my app....
 
-            for (var i = event.resultIndex; i < event.results.length; ++i) {
-            if (event.results[i].isFinal) {
-                interim_transcript = "";
-            } else {          
-                    //append the words
-                    interim_transcript = event.results[i][0].transcript;
-                   console.log(interim_transcript);
-            }
-            }
-        };
-    }
+                for (var i = event.resultIndex; i < event.results.length; ++i) {
+                if (event.results[i].isFinal) {
+                    interim_transcript = "";
+                } else {          
+                        //append the words
+                        interim_transcript = event.results[i][0].transcript;
+                    console.log(interim_transcript);
+                }
+                }
+            };
+        }
 }
 
 function createStream(){
@@ -213,8 +235,8 @@ function createStream(){
     //the timeout is for 20ms, so ~50 FPS updates on the canvas
     function drawCanvas(screenIn, cameraIn,canvas){
         var textLength = 60;
-        if(screenIn.paused || screenIn.ended) return false;
-       canvas.drawImage(screenIn, screenX0,screenY0, screenX1, screenY1);
+  //      if(screenIn.paused || screenIn.ended) return false;
+        canvas.drawImage(screenIn, screenX0,screenY0, screenX1, screenY1);
         canvas.drawImage(cameraIn, cameraX0, cameraY0, cameraX1, cameraY1);
        //write transcript on the screen
         if(interim_transcript.length <textLength){
@@ -231,8 +253,13 @@ function createStream(){
     }
     videoElem.addEventListener('play', function(){
        console.log('video playing');
-
-        drawCanvas(videoElem, cameraElem,ctx);
+        if (screenCapture){
+            //screen capture is supported
+            drawCanvas(videoElem, cameraElem,ctx);
+        }else{
+            //no screen capture (Android Chrome)
+            drawCanvas(cameraElem, cameraElem,ctx);
+        }
     },false);
 
     // Set event listeners for the start and stop buttons
@@ -314,8 +341,13 @@ async function startCapture() {
 
         //where do captions go?
         var captionLocation = document.getElementById("captionspicker-select").value;
+        captionX =0;
+        captionY = 0;
+        if(!captionRecord){
+            //if captions are not supported - turn 'em off
+            captionLocation = "noCaptions";
+        }
         console.log("captions", captionLocation);
-
         if (captionLocation === "captionsTop"){
             //captions at the top
             captionX = screenWidth/2;
@@ -357,8 +389,8 @@ async function startCapture() {
         var cameraId = cameras.options[cameras.selectedIndex].value;
         var mics = document.getElementById("audioPicker-select");
         var micId = mics.options[mics.selectedIndex].value;
-        //console.log("cameraid", cameraId);
-
+     
+        //camera
         navigator.getUserMedia = (navigator.mediaDevices.getUserMedia ||
                         navigator.mediaDevices.mozGetUserMedia ||
                         navigator.mediaDevices.msGetUserMedia ||
@@ -373,31 +405,50 @@ async function startCapture() {
                 frameRate: {ideal: cameraFR}
             }
         };
+        rearCameraMediaOptions = {
+            audio: false,
+            video:{
+                facingMode: "environment",
+                width: { min: 100, ideal: cameraW, max: 1920 },
+                height: { min: 100, ideal: cameraH, max: 1080 },
+                frameRate: {ideal: cameraFR}
+            }
+        };
         console.log(JSON.stringify(cameraMediaOptions));
 
         //all settings in  - start the cameras screenshare
-        if(!screenShared){
-            //screen is not shared - so add it.
+        if(!screenShared ){
+
+            if(screenCapture){
+            //screen can be shared, but screen is not shared - so add it.
             videoElem.srcObject = await navigator.mediaDevices.getDisplayMedia(displayMediaOptions);    
             screenShared = true;
+            }else{
+                //screen cannot be shared, so grab the rear facing camera.
+            videoElem.srcObject = await navigator.mediaDevices.getUserMedia(rearCameraMediaOptions);    
+            screenShared = true;
+
+            }
         }
         cameraStream = await navigator.mediaDevices.getUserMedia(cameraMediaOptions);
         cameraElem.srcObject =cameraStream;
 
         audioStreamOptions= {
+            mimeType: "video/webm;codecs=vp8,opus",
             audio: { 
-                deviceId: micId,
-                    echoCancellation: true},
-            video:false
+                deviceId: micId}
         };
 
-        //grab the audio and ad it to the stream coming from the canvas
+
+       
+     
+
+        //grab the audio and add it to the stream coming from the canvas
         audioStream = await navigator.mediaDevices.getUserMedia(audioStreamOptions);
         for (const track of audioStream.getTracks()) {
+            console.log("adding audio track");
             stream.addTrack(track);
         }
-
-
 
     //JUST START RECORDING
     startRecording();
@@ -435,7 +486,9 @@ function stopCapture(evt) {
     cameraElem.srcObject = null;
 
     //captions stop
-    recognition.stop();
+    if(captionRecord){
+        recognition.stop();
+    }
     if(!live){
         //stop blob recording
          uploadTheVideo();
@@ -453,7 +506,7 @@ function startRecording() {
     } catch (e0) {
         console.log('Unable to create MediaRecorder with options Object: ', options, e0);
         try {
-        options = {mimeType: 'video/webm;codecs=vp8', bitsPerSecond: 100000};
+        options = {mimeType: 'video/webm;codecs=vp8,opus', bitsPerSecond: 100000};
         mediaRecorder = new MediaRecorder(stream, options);
         } catch (e1) {
         console.log('Unable to create MediaRecorder with options Object: ', options, e1);
@@ -483,6 +536,7 @@ function startRecording() {
 
     else{
         //if recording save to blob
+        console.log("saving blob");
         mediaRecorder.ondataavailable = handleDataAvailable;
     }
     mediaRecorder.start(1000); // collect 10ms of data
@@ -492,6 +546,7 @@ function startRecording() {
 
 function handleDataAvailable(event) {
     if (event.data && event.data.size > 0) {
+
         recordedBlobs.push(event.data);
         }
 }
