@@ -20,10 +20,18 @@ window.onload  = function(){
     }
     if(cameraOnlyParam === "true"){
         cameraOnly = true;
+        screenCapture = false;
     }
-    console.log("live setting", live);
-
-
+    screenCapture = true;
+    //see if screen capture is supported
+    if("getDisplayMedia" in navigator.mediaDevices){
+        console.log("screen capture supported");
+    }else{
+        console.log("screen capture NOT supported");
+        screenCapture = false;
+        cameraOnly = true;
+    }
+   
 
     //set all the variables for the canvas and all the elements
     
@@ -43,6 +51,7 @@ window.onload  = function(){
 
          if(cameraOnly){
              //record in portrait
+             console.log("portrait canvas");
              ctx.canvas.width = 720;
              ctx.canvas.height= 1280;
          }else{
@@ -90,22 +99,6 @@ window.onload  = function(){
             captionRecord = false;
         }
         console.log("captionRecord", captionRecord);
-
-        screenCapture = true;
-        //see if screen capture is supported
-        if("getDisplayMedia" in navigator.mediaDevices){
-            console.log("screen capture supported");
-        }else{
-            console.log("screen capture NOT supported");
-            screenCapture = false;
-        }
-        //we can override the screenCapture with the 2camera parameter
-        console.log("cameraOnly", cameraOnly);
-        if(cameraOnly){
-            //by making screen capture false, we enable 2 camera mode
-            screenCapture = false;
-            console.log("screen capture off due to cameraOnly setting");
-        }
     
 
     //get cameras and mics
