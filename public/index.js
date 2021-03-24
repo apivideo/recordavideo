@@ -704,7 +704,7 @@ function connect_server(){
     if(!MediaRecorder){fail('No MediaRecorder available.');}
 
 
-    var socketOptions = {secure: true, reconnection: true, reconnectionDelay: 1000, timeout:5000, pingTimeout: 5000, pingInterval: 1000};
+    var socketOptions = {secure: true, reconnection: true, reconnectionDelay: 1000, timeout:10000, pingTimeout: 10000, pingInterval: 2000};
     
     //start socket connection
     socket = io.connect("/", socketOptions);
