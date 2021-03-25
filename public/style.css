@@ -160,6 +160,22 @@
     font-size: x-large;
     
 }
+#showCanvas{
+    text-align:left;
+    padding: 10px;
+    padding-left: 30px;
+    float: left;
+    color: black;
+    height:40px;
+    width:70%;
+    font-size: x-large;
+
+}
+#canvasDisplay-checkbox{
+    height: 30px;
+    width: 30px;
+
+}
 #buttons{
     text-align: center;
     padding:20px;
@@ -217,6 +233,9 @@ input[type=radio] {
     top:50%;
 
 }
+.videoCanvasHide{
+    display:none;
+}
 
 #video{
     width: 75%;
@@ -243,26 +262,37 @@ input[type=radio] {
         display:none;
 
    }
-   .nocamera{
-       display:none;
-   }
-   .bigcamera{
-        width:100%;
-        height: 100%;
-        position:absolute;
-        top:0; 
-        left:0;
-   }
-   .cameraBottomLeft{
-    width:25%;
-    top: 72%;
-        left:0%;
+  
+#showCanvas{
+    text-align:left;
+    padding: 10px;
+    padding-left: 30px;
+    float: left;
+    color: black;
+    height:40px;
+    width:70%;
+    font-size: x-large;
 
-   }
+}
+#video-information{
+    text-align:left;
+    padding: 10px;
+    padding-left: 30px;
+    float: left;
+    color: black;
+    height:40px;
+    width:70%;
+    font-size: large;
 
-   .cameraBottomRight{
-    width:25%;
-    top: 72%;
-    left:72%;
+}
+#chunk-information{
+    text-align:left;
+    padding: 10px;
+    padding-left: 30px;
+    float: left;
+    color: black;
+    height:40px;
+    width:70%;
+    font-size: large;
 
 }

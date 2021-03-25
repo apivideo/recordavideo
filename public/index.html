@@ -70,9 +70,9 @@
             <div id="screens"> 
                 <img src="screenlayout.svg">
                     <select name = "screen" id="screenpicker-select">
+                        <option id="bottomRight" value="bottomRight">Screen and camera (bottom right)</option>
                         <option id="screenOnly" value="screenOnly">Screen only</option>
                         <option id="cameraOnly" value="cameraOnly">Camera only</option>
-                        <option id="bottomRight" value="bottomRight">Screen and camera (bottom right)</option>
                         <option id="bottomLeft" value="bottomLeft">Screen and camera (bottom left)</option>
 
                     </select>
@@ -91,7 +91,12 @@
                     <option id="captionsBottom" value="captionsBottom">Captions (Bottom)</option>
                     <option id="noCaptions" value="noCaptions">No captions</option>
                 </select>
-            </div>  
+            </div> 
+            <div id="showCanvas">
+                <label for="canvasDisplay">Show recording</label> 
+                <input type="checkbox" name="canvasDisplay" id="canvasDisplay-checkbox" checked> </select>
+
+            </div> 
             <div id="buttons">
                 <p><button id="start" class = "start">Start Capture</button>
                 <button id="stop" class="stop">Stop Capture</button></p>
@@ -110,7 +115,7 @@
         </div>
         <canvas id="videoCanvas">
         </canvas>
-
+        <br/>
         <div id="video-information">  
         </div>
         <div id="chunk-information"></div>

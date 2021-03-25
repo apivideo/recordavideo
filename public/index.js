@@ -41,6 +41,9 @@ window.onload  = function(){
      cameraElem = document.getElementById("camera");
      startElem = document.getElementById("start");
      stopElem = document.getElementById("stop");
+
+
+ 
      captionRecord = true;
      screenShared = false;
       //camera
@@ -49,6 +52,7 @@ window.onload  = function(){
       cameraFR= 25;
         //set up the recording canvas
          canvas = document.getElementById("videoCanvas");
+
          ctx = canvas.getContext("2d");
 
          if(cameraOnly){
@@ -239,10 +243,10 @@ function createStream(){
     var recordedBlobs;
     var sourceBuffer;
     //capture stream at 25 fps
-    stream = canvas.captureStream(25);
+   stream = canvas.captureStream(25);
+   // console.log("stream", stream);
 
-
-    //stream.addTrack(cameraIn.getAudioTracks()[0]);
+    console.log("stream", stream);
     console.log('Got stream from canvas');
     var options = {mimeType: 'video/webm;codecs=vp9', bitsPerSecond: 100000};
        
@@ -258,13 +262,14 @@ function createStream(){
         }
         else{
             ctx.fillText("no captions", captionX, captionY);
-           // ctx.fillText(interim_transcript.substring(0,textLength), captionX, captionY);
-           // ctx.fillText(interim_transcript.substring(textLength,textLength*2), captionX, (captionY +45));
-          //  ctx.fillText(interim_transcript.substring(textLength*2,textLength*3), captionX, (captionY+90));
+    
         }
         setTimeout(drawCanvas, 20,screenIn, cameraIn,canvas);
 
     }
+  
+    
+
     videoElem.addEventListener('play', function(){
        console.log('video playing');
             //draw the 2 streams to the canvas
@@ -278,6 +283,7 @@ function createStream(){
 
     stopElem.addEventListener("click", function(evt) {
     stopCapture();
+
     }, false);
 }
 async function startCapture() {
@@ -293,6 +299,17 @@ async function startCapture() {
             startElem.className = "modifyScreens";
             startElem.innerHTML = "Change layout";
         }
+
+               //cedric wants to hide the canvas
+               canvasShow = document.getElementById("canvasDisplay-checkbox").checked;
+               console.log("canvasShow", canvasShow);
+               //hide the canvas if canvasShow is not checked
+               if(!canvasShow){
+                   //hide the canvas
+                   canvas.style.display = "none";
+               }
+
+
         //add text for the 2 screens
         document.getElementById("videoInputText").innerHTML = "Screen and camera inputs";
 
@@ -402,7 +419,7 @@ async function startCapture() {
 
       
 
-        //seelect the camera and the micrphone: 
+        //select the camera and the micrphone: 
         var cameras = document.getElementById("cameraPicker-select");
         var cameraId = cameras.options[cameras.selectedIndex].value;
         var mics = document.getElementById("audioPicker-select");
@@ -465,14 +482,27 @@ async function startCapture() {
         };
 
 
-       
-     
-
+        
+        
         //grab the audio and add it to the stream coming from the canvas
         audioStream = await navigator.mediaDevices.getUserMedia(audioStreamOptions);
+
+        var gettracks1 =stream.getTracks;
+        console.log("gettracks1",gettracks1 +gettracks1.length);
+        for (const track1 of stream.getTracks()) {
+            console.log("stream track");
+        }
+
         for (const track of audioStream.getTracks()) {
             console.log("adding audio track");
-            stream.addTrack(track);
+          //  stream.addTrack(track);
+           
+            console.log("stream added audio", stream);
+        }
+        var gettracks2 =stream.getTracks;
+        console.log("gettracks2",gettracks2 +gettracks2.length);
+        for (const track1 of stream.getTracks()) {
+            console.log("stream track after");
         }
 
     //JUST START RECORDING
@@ -499,6 +529,7 @@ function stopCapture(evt) {
        stopElem.style.display = "none";
        document.getElementById("videoInputText").innerHTML="";
     //screen stop
+    stopRecording();
     let tracks = videoElem.srcObject.getTracks();
     console.log(JSON.stringify(tracks));
     tracks.forEach(track => track.stop());
@@ -525,7 +556,7 @@ function stopCapture(evt) {
 }
 
 function startRecording() {
-    var options = {mimeType: 'video/webm;codecs=vp9', audioBitsPerSecond: 100000, videoBitsPerSecond: 4000000};
+    var options = {mimeType: 'video/webm;codecs=vp9,opus', audioBitsPerSecond: 100000, videoBitsPerSecond: 4000000};
     recordedBlobs = [];
     try {
         mediaRecorder = new MediaRecorder(stream, options);
@@ -546,7 +577,9 @@ function startRecording() {
         }
         }
     }
-    console.log('Created MediaRecorder', mediaRecorder, 'with options', options);
+    console.log('Created video MediaRecorder', mediaRecorder, 'with options', options);
+
+
     mediaRecorder.onstop = handleStop;
     if(live){
         console.log("mime", mediaRecorder.mimeType);
@@ -565,15 +598,16 @@ function startRecording() {
         console.log("saving blob");
         mediaRecorder.ondataavailable = handleDataAvailable;
     }
-    mediaRecorder.start(10); // collect 10ms of data
+    mediaRecorder.start(250); // collect 10ms of data
     console.log('MediaRecorder started', mediaRecorder);
 }
 
 
 function handleDataAvailable(event) {
     if (event.data && event.data.size > 0) {
-
+        
         recordedBlobs.push(event.data);
+        //console.log("handledataavailable", recordedBlobs.length);
         }
 }
 function handleStop(event) {
@@ -583,8 +617,8 @@ function handleStop(event) {
 
 function stopRecording() {
     mediaRecorder.stop();
-    recordedVideo.controls = true;
-    //download();
+  //  recordedVideo.controls = true;
+   // download();
 }
 
 function play() {
