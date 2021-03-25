@@ -244,6 +244,9 @@ function createStream(){
     var sourceBuffer;
     //capture stream at 25 fps
    stream = canvas.captureStream(25);
+   console.log("stream tracks", stream.getTracks());
+   console.log("stream tracks", stream.getVideoTracks());
+   console.log("stream tracks", stream.getAudioTracks());
    // console.log("stream", stream);
 
     console.log("stream", stream);
@@ -426,6 +429,7 @@ async function startCapture() {
         var micId = mics.options[mics.selectedIndex].value;
      
         //camera
+        console.log("frameRate", cameraFR);
         navigator.getUserMedia = (navigator.mediaDevices.getUserMedia ||
                         navigator.mediaDevices.mozGetUserMedia ||
                         navigator.mediaDevices.msGetUserMedia ||
@@ -477,6 +481,7 @@ async function startCapture() {
 
         audioStreamOptions= {
             mimeType: "video/webm;codecs=vp8,opus",
+           // mimeType: "video/mp4",
             audio: { 
                 deviceId: micId}
         };
@@ -487,24 +492,17 @@ async function startCapture() {
         //grab the audio and add it to the stream coming from the canvas
         audioStream = await navigator.mediaDevices.getUserMedia(audioStreamOptions);
 
-        var gettracks1 =stream.getTracks;
-        console.log("gettracks1",gettracks1 +gettracks1.length);
-        for (const track1 of stream.getTracks()) {
-            console.log("stream track");
-        }
 
         for (const track of audioStream.getTracks()) {
             console.log("adding audio track");
-          //  stream.addTrack(track);
-           
+           stream.addTrack(track);
             console.log("stream added audio", stream);
         }
-        var gettracks2 =stream.getTracks;
-        console.log("gettracks2",gettracks2 +gettracks2.length);
-        for (const track1 of stream.getTracks()) {
-            console.log("stream track after");
-        }
-
+        
+        console.log("stream tracks", stream.getTracks());
+        console.log("stream tracks", stream.getVideoTracks());
+        console.log("stream tracks", stream.getAudioTracks());        
+        
     //JUST START RECORDING
     startRecording();
 
@@ -556,36 +554,44 @@ function stopCapture(evt) {
 }
 
 function startRecording() {
-    var options = {mimeType: 'video/webm;codecs=vp9,opus', audioBitsPerSecond: 100000, videoBitsPerSecond: 4000000};
+    //if I omit the MIMEtype, MediaRecorder works in Safari 14.0.3.  If I add a Mime.... it fails.
+    //i had a mimetype in the options and it would not record properly.
+    var options = { audioBitsPerSecond: 100000, videoBitsPerSecond: 4000000};
+    //var options = 'video/mp4';
     recordedBlobs = [];
     try {
         mediaRecorder = new MediaRecorder(stream, options);
+        console.log("options", options);
+        console.log("mediaRecorder mime", mediaRecorder.mimeType);
     } catch (e0) {
         console.log('Unable to create MediaRecorder with options Object: ', options, e0);
         try {
         options = {mimeType: 'video/webm;codecs=vp8,opus', bitsPerSecond: 100000};
         mediaRecorder = new MediaRecorder(stream, options);
+        console.log("options", options);
         } catch (e1) {
         console.log('Unable to create MediaRecorder with options Object: ', options, e1);
         try {
             options = 'video/mp4';
             mediaRecorder = new MediaRecorder(stream, options);
+            console.log("options", options);
         } catch (e2) {
             alert('MediaRecorder is not supported by this browser.');
+            console.log('Unable to create MediaRecorder with options Object: ', options, e1);
             console.error('Exception while creating MediaRecorder:', e2);
             return;
         }
         }
     }
     console.log('Created video MediaRecorder', mediaRecorder, 'with options', options);
-
-
+    console.log(",ediacrecorder stream info", mediaRecorder.stream);
+    console.log(",ediacrecorder stream trackinfo", mediaRecorder.stream.getTracks());
     mediaRecorder.onstop = handleStop;
     if(live){
         console.log("mime", mediaRecorder.mimeType);
         socket.emit("config_vcodec", mediaRecorder.mimeType);
         mediaRecorder.ondataavailable = function(e) {
-           // console.log("e", e.data);
+          // console.log("e", e.data);
             socket.emit("binarystream",e.data);
             state="start";
             //chunks.push(e.data);
@@ -596,20 +602,35 @@ function startRecording() {
     else{
         //if recording save to blob
         console.log("saving blob");
-        mediaRecorder.ondataavailable = handleDataAvailable;
+        //mediaRecorder.ondataavailable = handleDataAvailable;
+        mediaRecorder.ondataavailable = function handleDataAvailable(event) {
+            console.log("data-available");
+            if (event.data && event.data.size > 0) {
+                console.log("event.data", event.data);
+                const blobby = new Blob([event.data], {type: mediaRecorder.mimeType});
+                console.log("blobby", blobby);
+                recordedBlobs.push(blobby);
+                console.log(recordedBlobs);
+               console.log("handledataavailable", recordedBlobs.length);
+                }
+            }
+ 
     }
-    mediaRecorder.start(250); // collect 10ms of data
+    mediaRecorder.start(10); // collect 10ms of data
     console.log('MediaRecorder started', mediaRecorder);
 }
 
-
+/*
 function handleDataAvailable(event) {
+    console.log("data-available");
     if (event.data && event.data.size > 0) {
         
         recordedBlobs.push(event.data);
-        //console.log("handledataavailable", recordedBlobs.length);
+        console.log(recordedBlobs);
+       console.log("handledataavailable", recordedBlobs.length);
         }
 }
+*/
 function handleStop(event) {
     console.log('Recorder stopped: ', event);
     console.log('Recorded Blobs: ', recordedBlobs);
@@ -644,6 +665,8 @@ function download() {
 
 function uploadTheVideo(){
     var chunkSize=1000000;
+
+    
     var blob = new Blob(recordedBlobs, {type: 'video/webm'});
     var file=blob;
     var numberofChunks = Math.ceil(file.size/chunkSize);
