@@ -1,0 +1,120 @@
+<html>
+
+    <head>
+       
+        <link rel="stylesheet" href="style.css">
+        <script src="index.js"></script>
+        <!-- Global site tag (gtag.js) - Google Analytics -->
+            <script async src="https://www.googletagmanager.com/gtag/js?id=G-N9E9YP1HGF"></script>
+            <script>
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'G-N9E9YP1HGF');
+            </script>
+            <script>
+                var __nspid="isrtzw";
+                var __nsptags=[];
+                (function(w, d) { var x = function() {
+                var j=d.createElement("script");j.type="text/javascript";j.async=true;
+                j.src="http"+("https:"===d.location.protocol?"s://cs":"://c")+".ns1p.net/p.js?a="+__nspid;
+                d.body.appendChild(j); }
+                if(w.addEventListener) { w.addEventListener("load", x, false); }
+                else if(w.attachEvent) { w.attachEvent("onload", x); }
+                else { w.onload = x; }
+                }(window, document));
+                </script>
+     
+    </head>
+
+
+    <body>
+
+    <!--framework fron https://developer.mozilla.org/en-US/docs/Web/API/Screen_Capture_API/Using_Screen_Capture -->
+    <div id="nav">
+        <div id="title">
+            <p>Record a video to share</p>
+        </div>
+        <div id="subtitle"class="settingSubHeadings">
+            This experimental app works in Chrome, Firefox, Edge, Safari 14.0.3, Android
+        </div>
+        <div id="form">
+            <div class="settingHeadings">
+                Settings<br/>
+            </div>    
+            <div class="settingSubHeadings">
+                If no options: Press start, accept permissions, then refresh page<br/>
+            </div> 
+             <div id="devices">  
+                 <div id="mic">   
+                    <label for="audioPicker"><img src="mic.svg"></label> 
+                    <select name="audioPicker" id="audioPicker-select"> </select>
+                </div>
+                <div id = "cam">
+                    <label for="cameraPicker"><img src="camera.svg"></label> 
+                    <select name="cameraPicker" id="cameraPicker-select"> </select>
+                </div>
+            </div>  
+            <div class="settingHeadings">
+                Screen layout<br/>
+            </div>    
+            <div id="screens"> 
+                <img src="screenlayout.svg">
+                    <select name = "screen" id="screenpicker-select">
+                        <option id="bottomRight" value="bottomRight">Screen and camera (bottom right)</option>
+                        <option id="screenOnly" value="screenOnly">Screen only</option>
+                        <option id="cameraOnly" value="cameraOnly">Camera only</option>
+                        <option id="bottomLeft" value="bottomLeft">Screen and camera (bottom left)</option>
+
+                    </select>
+
+            </div> 
+            <div class="settingHeadings">
+                Captions<br/>
+            </div>
+            <div class="settingSubHeadings">
+                Only supported in Chrome<br/>
+            </div>        
+            <div id="captions"> 
+                <img src="captions.svg">
+                <select name = "captions" id="captionspicker-select">
+                    <option id="captionsTop" value="captionsTop">Captions (Top)</option>
+                    <option id="captionsBottom" value="captionsBottom">Captions (Bottom)</option>
+                    <option id="noCaptions" value="noCaptions">No captions</option>
+                </select>
+            </div> 
+            <div id="showCanvas">
+                <label for="canvasDisplay">Show recording</label> 
+                <input type="checkbox" name="canvasDisplay" id="canvasDisplay-checkbox" checked> </select>
+
+            </div> 
+            <div id="buttons">
+                <p><button id="start" class = "start">Start Capture</button>
+                <button id="stop" class="stop">Stop Capture</button></p>
+            </div>
+            <div class="settingSubHeadings">
+                Built with <a href="https://api.video"target="_new">api.video</a>
+            </div>  
+        </div> 
+
+
+    </div>
+    <div id="canvas">
+        <div id="video">
+            <div id="videoInputText" class="settingSubHeadings">
+               
+            </div> 
+            <video id="display" muted autoplay></video>
+            <video id="camera"  muted autoplay></video>
+            <br>
+        </div>
+        <canvas id="videoCanvas">
+        </canvas>
+        <br/>
+        <div id="video-information">  
+        </div>
+        <div id="chunk-information"></div>
+    </div>
+
+    </body>
+</html>
