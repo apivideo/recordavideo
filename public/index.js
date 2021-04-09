@@ -350,7 +350,7 @@ async function startCapture() {
             cameraY1= ctx.canvas.height;  
         
         }else if (screenLayout === 'bottomRight'){
-            //bottomr right camera
+            //bottom right camera
             //big screen
             screenX0 = 0;
             screenY0 = 0;
@@ -406,7 +406,7 @@ async function startCapture() {
 
             final_transcript = '';
             //english, but change as desired.
-            recognition.lang = "en-GB";
+            //recognition.lang = "en-GB";
             recognition.start();
         }
     
