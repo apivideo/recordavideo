@@ -1,6 +1,6 @@
 RTMP_url = 'rtmp://broadcast.api.video/s/30087931-229e-42cf-b5f9-e91bcc1f7332';
 live_url = 'https://embed.api.video/live/li400mYKSgQ6xs7taUeSaEKr';
-delegated_token = 'to1YSecZMRjrvDGxSfVFTNhG';
+delegated_token = 'tompBU8ZJcUCEsKGxxoBydh';
 //page defaults
 //vod by default, but we can make the page default to live.
 live = false; 
@@ -503,8 +503,8 @@ async function startCapture() {
         console.log("stream tracks", stream.getVideoTracks());
         console.log("stream tracks", stream.getAudioTracks());        
         
-    //JUST START RECORDING
-    startRecording();
+        //JUST START RECORDING
+        startRecording();
 
     } catch(err) {
         console.error("Error: " + err);
@@ -556,8 +556,8 @@ function stopCapture(evt) {
 function startRecording() {
     //if I omit the MIMEtype, MediaRecorder works in Safari 14.0.3.  If I add a Mime.... it fails.
     //i had a mimetype in the options and it would not record properly.
-    var options = { audioBitsPerSecond: 100000, videoBitsPerSecond: 4000000};
-    //var options = 'video/mp4';
+    //var options = { audioBitsPerSecond: 100000, videoBitsPerSecond: 4000000};
+    var options = 'video/mp4';
     recordedBlobs = [];
     try {
         mediaRecorder = new MediaRecorder(stream, options);
