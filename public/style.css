@@ -114,6 +114,18 @@
     padding:20px;
     float: left;
 }
+.cammicbutton{
+    padding: 10px;
+    display:flex;
+    align-items:center;
+    background-color: black;
+    text-align: center;
+    font-size: large;
+    font-weight:bold;
+    color: white;
+    width: 50%;
+}
+
 #mic{
     display:flex;
     align-items:center;
@@ -131,6 +143,7 @@
     font-size: x-large;
     
 }
+
 #camerapicker-select{
     height:40px;
     width:70%;
@@ -186,6 +199,14 @@
     font-size: x-large;
     font-weight:bold;
     color: white;
+    width: 95%;
+
+} 
+.camera{
+    background-color: black;
+    font-size: large;
+    font-weight:bold;
+    color: green;
     width: 95%;
 
 } 

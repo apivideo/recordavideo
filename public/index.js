@@ -7,7 +7,12 @@ live = false;
 //by default, screensahring
 cameraOnly = false;
 
-window.onload  = function(){
+window.onload  = function(){ 
+        navigator.getUserMedia({audio:true,video:true}, function(stream) {
+            stream.getTracks().forEach(x=>x.stop());
+            getCamAndMics();
+          }, err=>console.log(err));
+   
     console.log("loaded");
     // is this a mobile device - no screen share - and 2 cameras?
     //see if screen capture is supported
