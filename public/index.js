@@ -9,15 +9,25 @@ cameraOnly = false;
 
 window.onload  = function(){ 
         //this turns on the camera for a second - just to get permissions to populate the form with mics and cameras
+        navigator.getUserMedia = (navigator.mediaDevices.getUserMedia ||
+            navigator.mediaDevices.mozGetUserMedia ||
+            navigator.mediaDevices.msGetUserMedia ||
+            navigator.mediaDevices.webkitGetUserMedia);
         navigator.getUserMedia({audio:true,video:true}, function(stream) {
             stream.getTracks().forEach(x=>x.stop());
+            getCamAndMics();
           }, err=>console.log(err));
-          navigator.permissions.query({name:'camera'}).then(function(permissionStatus) {
-            permissionStatus.onchange = function() {
-              console.log('geolocation permission state has changed to ', this.state);
-              getCamAndMics();
-            };
-          });
+   
+          if( 'permissions' in navigator){
+              //not supported by safari...
+            navigator.permissions.query({name:'camera'}).then(function(permissionStatus) {
+                permissionStatus.onchange = function() {
+                console.log('geolocation permission state has changed to ', this.state);
+                getCamAndMics();
+                };
+            });
+        }
+          
     console.log("loaded");
     // is this a mobile device - no screen share - and 2 cameras?
     //see if screen capture is supported
@@ -172,20 +182,25 @@ function getCamAndMics(){
      navigator.mediaDevices.enumerateDevices()
      .then(function(devices) {
          devices.forEach(function(device) {
-             console.log(device.kind + ": " + device.label +" id = " + device.deviceId);
+             console.log("device", device);
+             deviceName = device.label;
+             if(deviceName == "" ){
+                 deviceName = device.deviceId;
+             }
+             console.log(device.kind + ": named: " + deviceName +" id = " + device.deviceId);
              var audioSelect = document.getElementById("audioPicker-select");
              var cameraSelect = document.getElementById("cameraPicker-select");
              if(device.kind=="audioinput"){
                  //add a select to the audio dropdown list
                  var option = document.createElement("option");
                  option.value = device.deviceId;
-                 option.text = device.label;
+                 option.text = deviceName;
                  audioSelect.appendChild(option);
              }else if(device.kind =="videoinput"){
                  //add a select to the camera dropdown list
                  var option = document.createElement("option");
                  option.value = device.deviceId;
-                 option.text = device.label;
+                 option.text = deviceName;
                  cameraSelect.appendChild(option);
 
              }
