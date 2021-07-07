@@ -11,9 +11,13 @@ window.onload  = function(){
         //this turns on the camera for a second - just to get permissions to populate the form with mics and cameras
         navigator.getUserMedia({audio:true,video:true}, function(stream) {
             stream.getTracks().forEach(x=>x.stop());
-            getCamAndMics();
           }, err=>console.log(err));
-   
+          navigator.permissions.query({name:'camera'}).then(function(permissionStatus) {
+            permissionStatus.onchange = function() {
+              console.log('geolocation permission state has changed to ', this.state);
+              getCamAndMics();
+            };
+          });
     console.log("loaded");
     // is this a mobile device - no screen share - and 2 cameras?
     //see if screen capture is supported
@@ -114,7 +118,11 @@ window.onload  = function(){
             captionRecord = false;
         }
         console.log("captionRecord", captionRecord);
-    
+
+
+    //get cameras and mics
+    getCamAndMics();
+
 
     //initialize captioning
     captioning();
