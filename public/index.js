@@ -8,6 +8,7 @@ live = false;
 cameraOnly = false;
 
 window.onload  = function(){ 
+        //this turns on the camera for a second - just to get permissions to populate the form with mics and cameras
         navigator.getUserMedia({audio:true,video:true}, function(stream) {
             stream.getTracks().forEach(x=>x.stop());
             getCamAndMics();
@@ -114,9 +115,6 @@ window.onload  = function(){
         }
         console.log("captionRecord", captionRecord);
     
-
-    //get cameras and mics
-    getCamAndMics();
 
     //initialize captioning
     captioning();
@@ -561,8 +559,8 @@ function stopCapture(evt) {
 function startRecording() {
     //if I omit the MIMEtype, MediaRecorder works in Safari 14.0.3.  If I add a Mime.... it fails.
     //i had a mimetype in the options and it would not record properly.
-    //var options = { audioBitsPerSecond: 100000, videoBitsPerSecond: 4000000};
-    var options = 'video/mp4';
+    var options = { audioBitsPerSecond: 100000, videoBitsPerSecond: 4000000};
+    //var options = 'video/mp4';
     recordedBlobs = [];
     try {
         mediaRecorder = new MediaRecorder(stream, options);
