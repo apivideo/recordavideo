@@ -78,7 +78,7 @@ window.onload  = function(){
       //camera
       cameraW = 1280;
       cameraH = 720;
-      cameraFR= 25;
+      cameraFR= 30;
         //set up the recording canvas
          canvas = document.getElementById("videoCanvas");
 
@@ -91,7 +91,7 @@ window.onload  = function(){
              ctx.canvas.height= 720;
              cameraW = 720;
              cameraH = 1280;
-             cameraFR= 25;
+           
          }else{
             ctx.canvas.width = 1280;
             ctx.canvas.height= 720;
@@ -278,7 +278,7 @@ function createStream(){
     var recordedBlobs;
     var sourceBuffer;
     //capture stream at 25 fps
-   stream = canvas.captureStream(25);
+   stream = canvas.captureStream(35);
    console.log("stream tracks", stream.getTracks());
    console.log("stream tracks", stream.getVideoTracks());
    console.log("stream tracks", stream.getAudioTracks());
@@ -302,7 +302,7 @@ function createStream(){
             ctx.fillText("no captions", captionX, captionY);
     
         }
-        setTimeout(drawCanvas, 20,screenIn, cameraIn,canvas);
+        setTimeout(drawCanvas, 15,screenIn, cameraIn,canvas);
 
     }
   
@@ -450,6 +450,7 @@ async function startCapture() {
         //this prevents awful feedback..
         displayMediaOptions = {
         video: {
+            frameRate: {ideal: cameraFR}
         },
         audio: false
         };
@@ -592,38 +593,24 @@ function startRecording() {
     //if I omit the MIMEtype, MediaRecorder works in Safari 14.0.3.  If I add a Mime.... it fails.
     //i had a mimetype in the options and it would not record properly.
     var options = { audioBitsPerSecond: 100000, videoBitsPerSecond: 4000000};
-    //var options = 'video/mp4';
+    //var options = {};
+   // var options = 'video/webm';
     recordedBlobs = [];
     try {
         mediaRecorder = new MediaRecorder(stream, options);
         console.log("options", options);
         console.log("mediaRecorder mime", mediaRecorder.mimeType);
-    } catch (e0) {
-        console.log('Unable to create MediaRecorder with options Object: ', options, e0);
-        try {
-        options = {mimeType: 'video/webm;codecs=vp8,opus', bitsPerSecond: 100000};
-        mediaRecorder = new MediaRecorder(stream, options);
-        console.log("options", options);
-        } catch (e1) {
-        console.log('Unable to create MediaRecorder with options Object: ', options, e1);
-        try {
-            options = 'video/mp4';
-            mediaRecorder = new MediaRecorder(stream, options);
-            console.log("options", options);
-        } catch (e2) {
+    }  catch (e2) {
             alert('MediaRecorder is not supported by this browser.');
-            console.log('Unable to create MediaRecorder with options Object: ', options, e1);
             console.error('Exception while creating MediaRecorder:', e2);
             return;
-        }
-        }
     }
     console.log('Created video MediaRecorder', mediaRecorder, 'with options', options);
     console.log(",ediacrecorder stream info", mediaRecorder.stream);
     console.log(",ediacrecorder stream trackinfo", mediaRecorder.stream.getTracks());
     mediaRecorder.onstop = handleStop;
     if(live){
-        console.log("mime", mediaRecorder.mimeType);
+        console.log("live mime", mediaRecorder.mimeType);
         socket.emit("config_vcodec", mediaRecorder.mimeType);
         mediaRecorder.ondataavailable = function(e) {
           // console.log("e", e.data);
