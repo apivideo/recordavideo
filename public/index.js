@@ -6,6 +6,7 @@ delegated_token = 'tompBU8ZJcUCEsKGxxoBydh';
 live = false; 
 //by default, screensahring
 cameraOnly = false;
+//adding a comment to change the doc for github
 
 window.onload  = function(){ 
         //this turns on the camera for a second - just to get permissions to populate the form with mics and cameras
