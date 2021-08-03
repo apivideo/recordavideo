@@ -687,7 +687,7 @@ function download() {
 }
 
 function uploadTheVideo(){
-    var chunkSize=1000000;
+    var chunkSize=5029000;
 
     
     var blob = new Blob(recordedBlobs, {type: 'video/webm'});
