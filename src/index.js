@@ -83,10 +83,11 @@ io.on('connection', function(socket){
 		var keyint = "keyint="+key;
 		//keyint_min default is 25
 		var keyint_min = Math.min(25, framerate*2);
-			var ops = [
+			var ops = [ '-re',
 				'-i','-',
 				 //'-c:v', 'libx264', 
-                 '-preset', 'ultrafast', '-tune', 'zerolatency', 
+                 //'-preset', 'ultrafast', 
+				// '-tune', 'zerolatency', 
 				//'-max_muxing_queue_size', '1000', 
 				//'-bufsize', '5000',
 				//'-r', '1', '-g', '2', '-keyint_min','2', 

@@ -100,7 +100,7 @@ window.onload  = function(){
          cw = ctx.width;
          ch = ctx.height;
          //caption font and colour
-         ctx.font = "30px Arial";
+         ctx.font = "60px Arial";
          ctx.fillStyle = "red";
          ctx.textAlign = "center";
       
@@ -123,7 +123,7 @@ window.onload  = function(){
          screenHeight = ctx.canvas.height;
         //set dimensions for captions 
          var captionX = screenWidth/2;
-         var captionY = 50;   
+         var captionY = 100;   
         ctx.clearRect(0, 0, canvas.width, canvas.height);
     
             
