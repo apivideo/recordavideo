@@ -1,4 +1,23 @@
+
+
+[![badge](https://img.shields.io/twitter/follow/api_video?style=social)](https://twitter.com/intent/follow?screen_name=api_video)
+
+[![badge](https://img.shields.io/github/stars/apivideo/recordavideo?style=social)](https://github.com/apivideo/recordavideo)
+
+[![badge](https://img.shields.io/discourse/topics?server=https%3A%2F%2Fcommunity.api.video)](https://community.api.video)
+
+![](https://github.com/apivideo/API_OAS_file/blob/master/apivideo_banner.png)
+
+[api.video](https://api.video) provides video APIs for building, scaling and operating on-demand and live streaming videos in your app, software or platform. 
+
 # recordavideo
+
+[Record.a.video](https://record.a.video) uses web APIs to capture video inputs from the camera and the screen. This is then combined and can be shared in 2 different ways: as a live stream, or as a recording that is uploaded after the recording is completed.
+
+
+To build your own, you'll need an api.video API key.  The first 3 lines of /public/index.js have the variables you must change to get your own version of duet a video up and running. The RTMP and live URLS are generated when you [create a livestream](https://docs.api.video/reference/post_live-streams), and the delegated_token is created from the [Generate an uplaod token](https://docs.api.video/reference/post_upload-tokens) endpoint at api.video.  (There are links to tutorials in the documentation for each endpoint).
+
+Once you update these, you can run the Node server (NPM start), and the app will be up and running!
 
 ## record a video
 

@@ -20,6 +20,7 @@ window.onload  = function(){
             }, err=>console.log(err));
         }else if('getUserMedia' in navigator.mediaDevices){
             //firefox
+            console.log("FIREFOX");
             navigator.mediaDevices.getUserMedia({audio:true,video:true}, function(stream) {
                 stream.getTracks().forEach(x=>x.stop());
                 getCamAndMics();
