@@ -7,11 +7,16 @@ app.use(express.static('public'));
 var io = require('socket.io')(server);
 var spawn = require('child_process').spawn;
 var port =3036;
-
+var publicdir = process.cwd() + '/public';
 
 app.get('/', function(req, res,next) {  
-    res.sendFile(__dirname + '/index1.html');
+    res.sendFile( publicdir +'/index.html');
 });
+
+app.get('/original', function(req, res,next) {  
+    res.sendFile( publicdir+ '/indexoriginal.html');
+});
+
 
 spawn('ffmpeg',['-h']).on('error',function(m){
 
