@@ -1,5 +1,5 @@
-RTMP_url = 'rtmp://broadcast.api.video/s/30087931-229e-42cf-b5f9-e91bcc1f7332';
-live_url = 'https://embed.api.video/live/li400mYKSgQ6xs7taUeSaEKr';
+RTMP_url = 'rtmp://broadcast.api.video/s/cd339b65-f4f9-40bc-afae-d586b3084f44';
+live_url = 'https://embed.api.video/live/liqHiqZ8KXIW63tLHHAbRDL';
 delegated_token = 'tompBU8ZJcUCEsKGxxoBydh';
 //page defaults
 //vod by default, but we can make the page default to live.
@@ -642,17 +642,20 @@ function handleStop(event) {
     }
 
 function stopRecording() {
-    document.getElementById("video-information").innerHTML = "Uploading the last bit of the video.  Please wait a second."
-    mediaRecorder.stop()//;
-        .then(function(video) {
+
+    
+            document.getElementById("video-information").innerHTML = "Uploading the last bit of the video.  Please wait a second."
+            mediaRecorder.stop()//;
+                .then(function(video) {
+                    
+                    console.log(video);
+                    //the video is fully uploaded. there will now be a url in the response
+                    playerUrl = video.assets.player;
+                    console.log("all uploaded! Watch here: ",playerUrl ) ;
+                    document.getElementById("video-information").innerHTML = "all uploaded! Watch the video <a href=\'" + playerUrl +"\' target=\'_blank\'>here</a>" ;
+                
+                });
             
-            console.log(video);
-              //the video is fully uploaded. there will now be a url in the response
-              playerUrl = video.assets.player;
-              console.log("all uploaded! Watch here: ",playerUrl ) ;
-              document.getElementById("video-information").innerHTML = "all uploaded! Watch the video <a href=\'" + playerUrl +"\' target=\'_blank\'>here</a>" ;
-        
-        });
   //  recordedVideo.controls = true;
    // download();
 }
