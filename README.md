@@ -9,6 +9,7 @@
 ![](https://github.com/apivideo/API_OAS_file/blob/master/apivideo_banner.png)
 
 <h1 align="center">api.video record a video</h1>
+
 [api.video](https://api.video) is the video infrastructure for product builders. Lightning fast video APIs for integrating, scaling, and managing on-demand & low latency live streaming features in your app.
 
 # recordavideo
