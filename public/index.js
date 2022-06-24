@@ -11,37 +11,14 @@ cameraOnly = false;
 window.onload = function () {
     //this turns on the camera for a second - just to get permissions to populate the form with mics and cameras
     //navigator.getUserMedia = (navigator.mediaDevices.getUserMedia);
-        
-        if('getUserMedia' in navigator){
-            //chrome
-            navigator.getUserMedia({audio:true,video:true}, function(stream) {
-                stream.getTracks().forEach(x=>x.stop());
-                getCamAndMics();
-            }, err=>console.log(err));
-        }else if('getUserMedia' in navigator.mediaDevices){
-            //firefox
-            console.log("FIREFOX");
-            navigator.mediaDevices.getUserMedia({audio:true,video:true}, function(stream) {
-                stream.getTracks().forEach(x=>x.stop());
-                getCamAndMics();
-            }, err=>console.log(err));
-
-
-        }
-   
-          if( 'permissions' in navigator){
-              //not supported by safari...
-            navigator.permissions.query({name:'camera'}).then(function(permissionStatus) {
-                permissionStatus.onchange = function() {
-                console.log('geolocation permission state has changed to ', this.state);
-                getCamAndMics();
-                };
-            });
-        }
+    navigator.mediaDevices.getUserMedia({ audio: true, video: true })
+        .then((stream) => {
+            getCamAndMics().then(() => stream.getTracks().forEach(x => x.stop()));
+        })
+        .catch(e => console.log(e));
 
 
 
-    console.log("loaded");
     // is this a mobile device - no screen share - and 2 cameras?
     //see if screen capture is supported
     if ("getDisplayMedia" in navigator.mediaDevices) {
@@ -142,11 +119,6 @@ window.onload = function () {
     }
     console.log("captionRecord", captionRecord);
 
-
-    //get cameras and mics
-    getCamAndMics();
-
-
     //initialize captioning
     captioning();
 
@@ -191,9 +163,13 @@ function initializeLiveStream() {
 
 function getCamAndMics() {
     // List cameras and microphones. in the menu
+    var audioSelect = document.getElementById("audioPicker-select");
+    var cameraSelect = document.getElementById("cameraPicker-select");
 
-     navigator.mediaDevices.enumerateDevices()
+    return navigator.mediaDevices.enumerateDevices()
         .then(function (devices) {
+            audioSelect.innerHTML = "";
+            cameraSelect.innerHTML = "";
             devices.forEach(function (device) {
                 console.log("device", device);
                 deviceName = device.label;
@@ -201,8 +177,6 @@ function getCamAndMics() {
                     deviceName = device.deviceId;
                 }
                 console.log(device.kind + ": named: " + deviceName + " id = " + device.deviceId);
-             var audioSelect = document.getElementById("audioPicker-select");
-             var cameraSelect = document.getElementById("cameraPicker-select");
                 if (device.kind == "audioinput") {
                     //add a select to the audio dropdown list
                     var option = document.createElement("option");
@@ -523,7 +497,8 @@ async function startCapture() {
             mimeType: "video/webm;codecs=vp8,opus",
             // mimeType: "video/mp4",
             audio: {
-                deviceId: micId}
+                deviceId: micId
+            }
         };
 
 
