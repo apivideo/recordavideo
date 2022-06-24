@@ -1,16 +1,26 @@
 
 
 [![badge](https://img.shields.io/twitter/follow/api_video?style=social)](https://twitter.com/intent/follow?screen_name=api_video)
-
 [![badge](https://img.shields.io/github/stars/apivideo/recordavideo?style=social)](https://github.com/apivideo/recordavideo)
-
 [![badge](https://img.shields.io/discourse/topics?server=https%3A%2F%2Fcommunity.api.video)](https://community.api.video)
 
 ![](https://github.com/apivideo/API_OAS_file/blob/master/apivideo_banner.png)
 
+
 <h1 align="center">api.video record a video</h1>
 
 [api.video](https://api.video) is the video infrastructure for product builders. Lightning fast video APIs for integrating, scaling, and managing on-demand & low latency live streaming features in your app.
+
+
+<div align="center">
+<br/>
+<h2>Deprecation warning</h2>
+<p>The <a href="https://record.a.video">https://record.a.video</a> demo has been completely redesigned.</p>
+<p>It's now based on the <a href="https://github.com/apivideo/api.video-typescript-media-stream-composer">@api.video/media-stream-composer</a> library which allows to upload videos composed of several streams (webcam, screen recording) to api.video with ease.</p>
+<p>The old code remains here for information purposes but it no longer corresponds to the record.a.video demo.</p>
+<br/><br/><br/><br/>
+</div>
+
 
 # recordavideo
 
