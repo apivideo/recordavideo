@@ -1,18 +1,13 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<svg width="48px" height="48px" viewBox="0 0 48 48" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-    <title>Icon mic</title>
-    <g id="Demos" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-        <g id="Record" transform="translate(-504.000000, -308.000000)">
-            <g id="Group" transform="translate(464.000000, 52.000000)">
-                <g id="Group-2" transform="translate(40.000000, 212.000000)">
-                    <g id="Icon-mic" transform="translate(0.000000, 44.000000)">
-                        <rect id="Rectangle" fill="#FEF3F0" x="0" y="0" width="48" height="48" rx="8"></rect>
-                        <g id="microphone" transform="translate(17.000000, 15.000000)" fill="#E53101">
-                            <path d="M4,3 C4,1.34314575 5.34314575,0 7,0 C8.65685425,0 10,1.34314575 10,3 L10,7 C10,8.65685425 8.65685425,10 7,10 C5.34314575,10 4,8.65685425 4,7 L4,3 Z M8,13.93 C11.4444618,13.4323998 14.0004627,10.4802188 14,7 C14,6.44771525 13.5522847,6 13,6 C12.4477153,6 12,6.44771525 12,7 C12,9.76142375 9.76142375,12 7,12 C4.23857625,12 2,9.76142375 2,7 C2,6.44771525 1.55228475,6 1,6 C0.44771525,6 0,6.44771525 0,7 C-0.000462698353,10.4802188 2.55553817,13.4323998 6,13.93 L6,16 L3,16 C2.44771525,16 2,16.4477153 2,17 C2,17.5522847 2.44771525,18 3,18 L11,18 C11.5522847,18 12,17.5522847 12,17 C12,16.4477153 11.5522847,16 11,16 L8,16 L8,13.93 Z" id="Shape"></path>
-                        </g>
-                    </g>
-                </g>
-            </g>
-        </g>
-    </g>
+<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g clip-path="url(#clip0_170_486)">
+<path d="M8 0.666687C7.46957 0.666687 6.96086 0.877401 6.58579 1.25247C6.21071 1.62755 6 2.13625 6 2.66669V8.00002C6 8.53045 6.21071 9.03916 6.58579 9.41423C6.96086 9.78931 7.46957 10 8 10C8.53043 10 9.03914 9.78931 9.41421 9.41423C9.78929 9.03916 10 8.53045 10 8.00002V2.66669C10 2.13625 9.78929 1.62755 9.41421 1.25247C9.03914 0.877401 8.53043 0.666687 8 0.666687Z" stroke="#A6B5CA" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M12.6667 6.66669V8.00002C12.6667 9.2377 12.175 10.4247 11.2999 11.2999C10.4247 12.175 9.23772 12.6667 8.00004 12.6667C6.76236 12.6667 5.57538 12.175 4.70021 11.2999C3.82504 10.4247 3.33337 9.2377 3.33337 8.00002V6.66669" stroke="#A6B5CA" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M8 12.6667V15.3334" stroke="#A6B5CA" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M5.33337 15.3333H10.6667" stroke="#A6B5CA" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+</g>
+<defs>
+<clipPath id="clip0_170_486">
+<rect width="16" height="16" fill="white"/>
+</clipPath>
+</defs>
 </svg>

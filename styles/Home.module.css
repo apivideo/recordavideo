@@ -1,0 +1,272 @@
+.container {
+  padding: 0 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.container > p {
+  margin: inherit;
+  margin-bottom: 20px;
+}
+.container > p:first-of-type {
+  margin: auto 0 5px 0;
+}
+
+.columnsContainer {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  max-width: 1600px;
+  margin-top: auto;
+  gap: 1rem;
+  padding: 60px 0;
+}
+
+.table {
+  margin-top: 1em;
+}
+
+.table thead tr th:first-child {
+  font-weight: bold;
+}
+
+.tableActions button {
+  min-width: 0;
+}
+
+.table button {
+  padding: 0;
+}
+
+.toggleButton {
+  text-transform: none;
+  border: 1px solid #A6B5CA !important;
+  border-radius: 8px !important;
+  font-weight: 500;
+  font-size: 1rem;
+}
+.toggleButtonIcon {
+  margin-right: 0.2em;
+  position: relative;
+  top: -0.02em;
+}
+.record {
+  color: #000000;
+  background-color: #FFFFFF !important;
+  border: 1px solid #A6B5CA;
+  border-radius: 8px;
+}
+.record svg {
+  color: #DC3A3A;
+}
+.record:disabled {
+  background: #F1F1F9;
+}
+.record:disabled svg {
+  color: #858585;
+}
+
+.settingsPaper {
+  position: relative;
+  padding: 0px 1em 1em 1em;
+  min-width: 290px;
+  width: 100%;
+  overflow: scroll;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+}
+.settingsPaper fieldset {
+  width: 100%;
+}
+.settingsPaper h2 {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin-top: 3rem;
+  margin-bottom: .5rem;
+  font-weight: 600;
+  font-size: 1rem;
+  width: 100%;
+}
+.settingsPaper > h2:nth-of-type(2) {
+  margin-top: 2rem;
+}
+.settingsPaper h2 button {
+  min-width: 30px;
+  padding: 0;
+}
+.settingsPaper h2 button > svg {
+  margin-right: 0;
+}
+
+.settingsPaper .noStream {
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: .3rem;
+  margin-top: .3rem;
+  font-weight: 500;
+  font-size: 12px;
+}
+
+.droppable {
+  max-height: 165px;
+  overflow: scroll;
+  padding-left: 5px;
+}
+
+.settingsButton {
+  position: absolute;
+  right: 5px;
+  top: 4px;
+  cursor: pointer;
+  transition: color 100ms ease-in-out;
+}
+.settingsButton:hover {
+  color: #f9400d;
+}
+
+.stream {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  border: 1px solid #A6B5CA;
+  border-radius: 8px;
+  margin-bottom: 6px;
+  transition: all 200ms ease-in-out;
+  background: #FFFFFF;
+}
+.stream > p {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 500;
+}
+.stream > svg {
+  color: #A6B5CA;
+  transition: color 150ms ease-in-out;
+  font-size: 20px;
+}
+.stream > svg:not(:first-of-type) {
+  cursor: pointer;
+}
+.stream > svg:not(:first-of-type):hover {
+  color: #000000;
+}
+.stream > svg:nth-of-type(2) {
+  margin-left: auto;
+  margin-right: .5rem;
+}
+.stream.dragged {
+  scale: 1.1;
+  box-shadow: 0px 2px 4px -1px rgb(0 0 0 / 20%), 0px 4px 5px 0px rgb(0 0 0 / 14%), 0px 1px 10px 0px rgb(0 0 0 / 12%);
+}
+
+.header {
+  position: absolute;
+  width: 100%;
+  border-radius: 8px 8px 0 0;
+  background-color: #444F6C;
+  padding: .5rem .8rem;
+  left: 0;
+}
+.header > img {
+  display: block;
+}
+
+@media (min-width: 540px) {
+  .canvasContainer {
+    min-width: 500px;
+  }
+
+  .settingsPaper {
+    max-width: 360px;
+  }
+}
+
+.previewPaper {
+  min-width: 500px;
+  width: 100%;
+  position: relative;
+}
+
+.stepperContainer {
+  position: absolute;
+  bottom: -8.5rem;
+  width: 100%;
+}
+.stepper {
+  gap: 20px;
+  align-items: flex-start;
+}
+.step {
+  width: 33%;
+}
+.stepContent {
+  border-left: none;
+}
+
+.canvasContainer {
+  background-color: #444F6C;
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.canvasContainer > p {
+  font-weight: 500;
+  font-size: 16px;
+  color: #FFFFFF;
+}
+
+.videoOff {
+  display: block;
+  margin: 0 auto;
+}
+
+.formControl {
+  position: relative;
+}
+.formControl > img {
+  position: absolute;
+  left: 10px;
+  top: 0;
+  bottom: 0;
+  margin: auto 0;
+}
+.audioSelect * {
+  border: none;
+}
+.audioSelect div[role=button] {
+  padding: 10px 13px;
+  padding-left: 30px;
+  border: 1px solid #A6B5CA;
+}
+
+.toolButtonGroup {
+  gap: .5rem
+}
+
+.recordContainer {
+  padding-top: 25px;
+  margin-top: auto;
+}
+
+.record {
+  display: block;
+  padding: 1rem 1.5rem;
+  border: 1px solid #A6B5CA;
+  border-radius: 8px;
+  background: #F1F1F9;
+  max-width: fit-content;
+  margin: 0 auto;
+  text-transform: none;
+}
+.record > div {
+  display: flex;
+  align-items: center;
+  font-weight: 500;
+  font-size: 16px;
+}
