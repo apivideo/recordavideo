@@ -6,17 +6,8 @@
   grid-column-gap: 1rem;
   grid-row-gap: 1.5rem;
   margin-bottom: auto;
-}
-
-/* .columnsContainer {
-  display: flex;
-  flex-direction: row;
-  width: 100%;
-  max-width: 1600px;
   margin-top: auto;
-  gap: 1rem;
-  padding: 50px 0 20px 0;
-} */
+}
 
 .table {
   margin-top: 1em;
@@ -182,8 +173,6 @@
 }
 
 .stepperContainer {
-  /* width: 100%; */
-  padding-bottom: 20px;
   grid-area: 2 / 2 / 3 / 3;
 }
 .stepper {
@@ -281,6 +270,11 @@
   }
 }
 
+@media (min-width: 941px) {
+  .settingsPaper, .previewPaper, .canvasContainer {
+    max-height: 520px;
+  }
+}
 @media (max-width: 940px) {
   .container {
     grid-template-columns: 1fr;

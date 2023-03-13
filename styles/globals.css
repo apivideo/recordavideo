@@ -6,7 +6,13 @@ body {
     Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
   background-color: rgb(239 239 248);
   padding-bottom: 1rem;
-  height: fit-content;
+  height: 100vh;
+}
+
+#__next {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
 a {
