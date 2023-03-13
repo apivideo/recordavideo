@@ -242,6 +242,38 @@ const Home: NextPage = () => {
     setStreams(streams.filter(s => s.id !== stream.id));
   }
 
+  function onRecordClicked() {
+      if (!isRecording) {
+        composer.startRecording({
+          uploadToken,
+          videoName: uploadSettings.videoName,
+          generateFileOnStop: uploadSettings.downloadVideoFile,
+          mimeType: uploadSettings.mimeType,
+          origin: {
+            application: {
+              name: "record-a-video",
+              version: "1.0.0",
+            }
+          }
+        });
+        setVideoStatus("recording");
+        composer.addEventListener("error", (e) => {
+          setErrorMessage((e as any).data.title || "An unknown error occurred");
+          setIsRecording(false);
+        });
+        composer.addEventListener("videoPlayable", (e) => {
+          setVideoStatus("playable");
+          setPlayerUrl((e as any).data.assets.player);
+        });
+
+        setPlayerUrl(null);
+        setIsRecording(true);
+      } else {
+        composer.stopRecording().then(e => setVideoStatus("encoding"));
+        setIsRecording(false);
+      }
+  }
+
   let stepNum = 0;
   if (videoStatus === "encoding") {
     stepNum = 1;
@@ -468,40 +500,12 @@ const Home: NextPage = () => {
 
             <Tooltip style={{ fontSize: 22 }} title={<p style={{ fontSize: 16, padding: 0, margin: 0 }}>Start by adding one or more streams by clicking on the &quot;+&quot; icon above.</p>} placement='bottom' arrow disableHoverListener={streams.length > 0}>
               <span className={styles.recordContainer}>
-                <Button className={styles.record} disabled={streams.length === 0} variant="contained" fullWidth onClick={async () => {
-                  if (!isRecording) {
-                    composer.startRecording({
-                      uploadToken,
-                      videoName: uploadSettings.videoName,
-                      generateFileOnStop: uploadSettings.downloadVideoFile,
-                      mimeType: uploadSettings.mimeType,
-                      origin: {
-                        application: {
-                          name: "record-a-video",
-                          version: "1.0.0",
-                        }
-                      }
-                    });
-                    setVideoStatus("recording");
-                    composer.addEventListener("error", (e) => {
-                      setErrorMessage((e as any).data.title || "An unknown error occurred");
-                      setIsRecording(false);
-                    });
-                    composer.addEventListener("videoPlayable", (e) => {
-                      setVideoStatus("playable");
-                      setPlayerUrl((e as any).data.assets.player);
-                    });
-
-                    setPlayerUrl(null);
-                    setIsRecording(true);
-                  } else {
-                    composer.stopRecording().then(e => setVideoStatus("encoding"));
-                    setIsRecording(false);
+                <button className={styles.record} disabled={streams.length === 0} onClick={onRecordClicked}>
+                  {!isRecording
+                    ? <div><StartRecordingIcon fontSize="large" className={styles.toggleButtonIcon} />Start recording</div>
+                    : <div><StopRoundedIcon style={{ color: '#DC3A3A' }} fontSize="large" className={styles.toggleButtonIcon} />Stop recording ({recordingDuration} sec)</div>
                   }
-                }}>{!isRecording
-                  ? <div><StartRecordingIcon fontSize="large" className={styles.toggleButtonIcon} />Start recording</div>
-                  : <div><StopRoundedIcon style={{ color: '#DC3A3A' }} fontSize="large" className={styles.toggleButtonIcon} />Stop recording ({recordingDuration} sec)</div>}
-                </Button>
+                </button>
               </span>
             </Tooltip>
           </Paper>

@@ -236,8 +236,8 @@
   bottom: 0;
   margin: auto 0;
 }
-.audioSelect * {
-  border: none;
+.audioSelect fieldset {
+  border: none !important;
 }
 .audioSelect div[role=button] {
   padding: 10px 13px;
@@ -263,6 +263,13 @@
   max-width: fit-content;
   margin: 0 auto;
   text-transform: none;
+  transition: box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+}
+.record:not([disabled]) {
+  cursor: pointer;
+}
+.record:not([disabled]):hover {
+  box-shadow: 0px 2px 4px -1px rgb(0 0 0 / 20%), 0px 4px 5px 0px rgb(0 0 0 / 14%), 0px 1px 10px 0px rgb(0 0 0 / 12%);
 }
 .record > div {
   display: flex;
