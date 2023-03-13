@@ -283,352 +283,317 @@ const Home: NextPage = () => {
   }
 
   return (
-    <div className={styles.container}>
-      <ThemeProvider theme={theme}>
-        <Head>
-          <title>@api.video/media-stream-composer library sample application</title>
-          <meta name="description" content="Next.js application showing the features offered by the @api.video/media-stream-composer library." />
-          <link rel="icon" href="/favicon.ico" />
-        </Head>
+    <>
+      <div className={styles.container}>
+        <ThemeProvider theme={theme}>
+          <Head>
+            <title>@api.video/media-stream-composer library sample application</title>
+            <meta name="description" content="Next.js application showing the features offered by the @api.video/media-stream-composer library." />
+            <link rel="icon" href="/favicon.ico" />
+          </Head>
 
-        <div className={styles.columnsContainer} style={{ paddingBottom: videoStatus ? 150 : undefined }}>
+            <Paper className={styles.settingsPaper} elevation={0}>
+              <div className={styles.header}><NextImage src="/logo.svg" alt="api.video logo" width={65} height={15} /></div>
+              <h2>
+                <p>Video streams</p>
+                <PopupState variant="popover" popupId="addStreamMenu">
+                  {(popupState) => (
+                    <React.Fragment>
+                      <Tooltip title="Add" arrow><Button variant="text" {...bindTrigger(popupState)}><AddIcon fontSize='medium' sx={{ mr: 1 }} /></Button></Tooltip>
+                      <Menu {...bindMenu(popupState)}>
+                        <MenuItem onClick={async () => { popupState.close(); setAddStreamDialogOpen(true); }}>Add a custom stream ...</MenuItem>
+                        <MenuItem onClick={async () => {
+                          popupState.close();
+                          addStream({
+                            type: "image",
+                            imageUrl: "/Logo_white_text.svg",
+                            position: "fixed",
+                            width: "38%",
+                            top: "88%",
+                            left: "60%",
+                            mask: "none",
+                            draggable: true,
+                            resizable: true,
+                          });
+                        }}>Add api.video logo :)</MenuItem>
 
-          <Paper className={styles.settingsPaper} elevation={0}>
-            <div className={styles.header}><NextImage src="/logo.svg" alt="api.video logo" width={65} height={15} /></div>
-            <h2>
-              <p>Video streams</p>
-              <PopupState variant="popover" popupId="addStreamMenu">
-                {(popupState) => (
-                  <React.Fragment>
-                    <Tooltip title="Add" arrow><Button variant="text" {...bindTrigger(popupState)}><AddIcon fontSize='medium' sx={{ mr: 1 }} /></Button></Tooltip>
-                    <Menu {...bindMenu(popupState)}>
-                      <MenuItem onClick={async () => { popupState.close(); setAddStreamDialogOpen(true); }}>Add a custom stream ...</MenuItem>
-                      <MenuItem onClick={async () => {
-                        popupState.close();
-                        addStream({
-                          type: "image",
-                          imageUrl: "/Logo_white_text.svg",
-                          position: "fixed",
-                          width: "38%",
-                          top: "88%",
-                          left: "60%",
-                          mask: "none",
-                          draggable: true,
-                          resizable: true,
-                        });
-                      }}>Add api.video logo :)</MenuItem>
+                        {videoDevices.map(d =>
+                        ([
+                          <MenuItem key={d.deviceId + "_screen"} onClick={async () => {
+                            popupState.close();
+                            addStream({
+                              type: "screen",
+                              position: "contain",
+                              mask: "none",
+                              draggable: true,
+                              resizable: true,
+                            });
+                            addStream({
+                              type: "webcam",
+                              deviceId: d.deviceId,
+                              position: "fixed",
+                              height: "30%",
+                              top: "68%",
+                              left: "2%",
+                              mask: "circle",
+                              draggable: true,
+                              resizable: true,
+                            });
+                          }}>Add screencast + rounded webcam ({d.label})</MenuItem>,
+                          <MenuItem key={d.deviceId} onClick={async () => {
+                            popupState.close();
+                            addStream({
+                              type: "webcam",
+                              deviceId: d.deviceId,
+                              position: "fixed",
+                              height: "30%",
+                              top: "68%",
+                              left: "2%",
+                              mask: "circle",
+                              draggable: true,
+                              resizable: true,
+                            });
+                          }}>Add rounded webcam only ({d.label})</MenuItem>,]))
+                        }
 
-                      {videoDevices.map(d =>
-                      ([
-                        <MenuItem key={d.deviceId + "_screen"} onClick={async () => {
+                        <MenuItem onClick={async () => {
                           popupState.close();
                           addStream({
                             type: "screen",
                             position: "contain",
                             mask: "none",
-                            draggable: true,
-                            resizable: true,
+                            draggable: false,
+                            resizable: false,
                           });
-                          addStream({
-                            type: "webcam",
-                            deviceId: d.deviceId,
-                            position: "fixed",
-                            height: "30%",
-                            top: "68%",
-                            left: "2%",
-                            mask: "circle",
-                            draggable: true,
-                            resizable: true,
-                          });
-                        }}>Add screencast + rounded webcam ({d.label})</MenuItem>,
-                        <MenuItem key={d.deviceId} onClick={async () => {
-                          popupState.close();
-                          addStream({
-                            type: "webcam",
-                            deviceId: d.deviceId,
-                            position: "fixed",
-                            height: "30%",
-                            top: "68%",
-                            left: "2%",
-                            mask: "circle",
-                            draggable: true,
-                            resizable: true,
-                          });
-                        }}>Add rounded webcam only ({d.label})</MenuItem>,]))
-                      }
+                        }}>Add screencast only</MenuItem>
 
-                      <MenuItem onClick={async () => {
-                        popupState.close();
-                        addStream({
-                          type: "screen",
-                          position: "contain",
-                          mask: "none",
-                          draggable: false,
-                          resizable: false,
-                        });
-                      }}>Add screencast only</MenuItem>
+                      </Menu>
+                    </React.Fragment>
+                  )}
+                </PopupState>
+              </h2>
 
-                    </Menu>
-                  </React.Fragment>
-                )}
-              </PopupState>
-            </h2>
-
-            {streams.length === 0
-              ? (
-                <>
-                  <NextImage className={styles.videoOff} src="/video-off.svg" alt='No stream' width={22} height={22} />
-                  <p className={styles.noStream}><AddIcon fontSize='small' /> to add video streams</p>
-                </>
-              ) : (
-                <DragDropContext onDragEnd={onDragEnd}>
-                  <Droppable droppableId="streams">
-                    {provided => (
-                      <div ref={provided.innerRef} {...provided.droppableProps} className={styles.droppable}>
-                        {streams.map((stream, i) => (
-                          <Draggable key={`${stream.id}_${i}`} draggableId={`${stream.id}_${i}`} index={i}>
-                            {(provided, snapshot) => (
-                              <div 
-                                ref={provided.innerRef}
-                                {...provided.draggableProps}
-                                className={`${styles.stream} ${snapshot.isDragging ? styles.dragged : ''}`}
-                              >
-                                <div data-svg="true" {...provided.dragHandleProps}>
-                                  <DragIndicatorRoundedIcon />
+              {streams.length === 0
+                ? (
+                  <>
+                    <NextImage className={styles.videoOff} src="/video-off.svg" alt='No stream' width={22} height={22} />
+                    <p className={styles.noStream}><AddIcon fontSize='small' /> to add video streams</p>
+                  </>
+                ) : (
+                  <DragDropContext onDragEnd={onDragEnd}>
+                    <Droppable droppableId="streams">
+                      {provided => (
+                        <div ref={provided.innerRef} {...provided.droppableProps} className={styles.droppable}>
+                          {streams.map((stream, i) => (
+                            <Draggable key={`${stream.id}_${i}`} draggableId={`${stream.id}_${i}`} index={i}>
+                              {(provided, snapshot) => (
+                                <div 
+                                  ref={provided.innerRef}
+                                  {...provided.draggableProps}
+                                  className={`${styles.stream} ${snapshot.isDragging ? styles.dragged : ''}`}
+                                >
+                                  <div data-svg="true" {...provided.dragHandleProps}>
+                                    <DragIndicatorRoundedIcon />
+                                  </div>
+                                  <p>
+                                    {stream.id}
+                                  </p>
+                                  <DeleteOutlineOutlinedIcon onClick={() => removeStream(stream)} />
+                                  {stream.options.hidden 
+                                    ? <VisibilityOffOutlinedIcon onClick={() => toggleStreamVisibility(stream)} /> 
+                                    : <VisibilityOutlinedIcon onClick={() => toggleStreamVisibility(stream)} />
+                                  }
                                 </div>
-                                <p>
-                                  {stream.id}
-                                </p>
-                                <DeleteOutlineOutlinedIcon onClick={() => removeStream(stream)} />
-                                {stream.options.hidden 
-                                  ? <VisibilityOffOutlinedIcon onClick={() => toggleStreamVisibility(stream)} /> 
-                                  : <VisibilityOutlinedIcon onClick={() => toggleStreamVisibility(stream)} />
-                                }
-                              </div>
-                            )}
-                          </Draggable>
-                        ))}
-                        {provided.placeholder}
-                      </div>
-                    )}
-                  </Droppable>
-                </DragDropContext>
-              )
-            }
+                              )}
+                            </Draggable>
+                          ))}
+                          {provided.placeholder}
+                        </div>
+                      )}
+                    </Droppable>
+                  </DragDropContext>
+                )
+              }
 
-            <h2>Audio source</h2>
-            <FormControl className={styles.formControl} fullWidth>
-              <NextImage src="/mic.svg" alt="Microphone" width={16} height={16} />
-              <Select
-                className={styles.audioSelect}
-                id="audio-source-select"
-                value={audioSource}
-                IconComponent={ExpandMoreIcon}
-                onChange={async (a) => {
-                  if (audioStreamId) {
-                    composer.removeAudioSource(audioStreamId);
-                  }
-                  const selectedAudioSource = a.target.value;
-                  let newAudioStreamId;
-                  if (selectedAudioSource !== "none") {
-                    const stream = await navigator.mediaDevices.getUserMedia({ audio: { deviceId: selectedAudioSource } });
-                    newAudioStreamId = await composer.addAudioSource(stream);
-                  }
-                  setAudioStreamId(newAudioStreamId);
-                  setAudioSource(selectedAudioSource);
-                }}
-              >
-                <MenuItem key={"undefined"} value={"none"}>None</MenuItem>
-                {audioDevices.map(d => <MenuItem key={d.deviceId} value={d.deviceId}>{d.label}</MenuItem>)}
-              </Select>
-            </FormControl>
-
-            <h2>Tool</h2>
-            <FormControl component="fieldset">
-              <FormGroup>
-                <ToggleButtonGroup
-                  fullWidth
-                  size="small"
-                  color="primary"
-                  value={mouseTool}
-                  className={styles.toolButtonGroup}
-                  exclusive
-                  onChange={(v, w) => {
-                    composer.setMouseTool(w);
-                    setMouseTool(w);
-                  }
-                  }
+              <h2>Audio source</h2>
+              <FormControl className={styles.formControl} fullWidth>
+                <NextImage src="/mic.svg" alt="Microphone" width={16} height={16} />
+                <Select
+                  className={styles.audioSelect}
+                  id="audio-source-select"
+                  value={audioSource}
+                  IconComponent={ExpandMoreIcon}
+                  onChange={async (a) => {
+                    if (audioStreamId) {
+                      composer.removeAudioSource(audioStreamId);
+                    }
+                    const selectedAudioSource = a.target.value;
+                    let newAudioStreamId;
+                    if (selectedAudioSource !== "none") {
+                      const stream = await navigator.mediaDevices.getUserMedia({ audio: { deviceId: selectedAudioSource } });
+                      newAudioStreamId = await composer.addAudioSource(stream);
+                    }
+                    setAudioStreamId(newAudioStreamId);
+                    setAudioSource(selectedAudioSource);
+                  }}
                 >
-                  <ToggleButton className={styles.toggleButton} disabled={streams.length === 0} value="move-resize">
-                    <FullscreenExitIcon className={styles.toggleButtonIcon} />
-                    Move / Resize
-                  </ToggleButton>
-                  <ToggleButton className={styles.toggleButton} disabled={streams.length === 0} value="draw">
-                    <GestureIcon className={styles.toggleButtonIcon} />
-                    Draw
-                  </ToggleButton>
-                </ToggleButtonGroup>
-                {mouseTool === "draw" && <>
-                  <FormLabel component="legend">Line color</FormLabel>
-                  <CirclePicker
-                    color={drawingColor}
-                    colors={['#FF6900', '#FCB900', '#9900EF', '#00D084', '#8ED1FC', '#0693E3']}
-                    onChange={(color: any) => { setDrawingColor(color.hex) }}
-                  />
-                  <FormControl variant="standard">
-                    <FormLabel component="legend">Auto erase delay</FormLabel>
-                    <Select
-                      labelId="width-select-standard-label"
-                      id="width-select-standard"
-                      value={drawingAutoEraseDelay}
-                      onChange={(v, w) => { setDrawingAutoEraseDelay(parseInt(v.target.value as string)) }}
-                      label="Auto erase delay"
-                    >
-                      <MenuItem value={0}>disabled</MenuItem>
-                      <MenuItem value={3}>3 seconds</MenuItem>
-                      <MenuItem value={5}>5 seconds</MenuItem>
-                      <MenuItem value={10}>10 seconds</MenuItem>
-                    </Select>
-                  </FormControl>
+                  <MenuItem key={"undefined"} value={"none"}>None</MenuItem>
+                  {audioDevices.map(d => <MenuItem key={d.deviceId} value={d.deviceId}>{d.label}</MenuItem>)}
+                </Select>
+              </FormControl>
 
-                  <Button variant="outlined" style={{ marginTop: "1em" }} onClick={() => composer.clearDrawing()}>clear drawings</Button>
-
-                </>}
-              </FormGroup>
-            </FormControl>
-
-            <SettingsIcon color='primary' onClick={() => setUploadSettingsDialogOpen(true)} className={styles.settingsButton} />
-
-            <Tooltip style={{ fontSize: 22 }} title={<p style={{ fontSize: 16, padding: 0, margin: 0 }}>Start by adding one or more streams by clicking on the &quot;+&quot; icon above.</p>} placement='bottom' arrow disableHoverListener={streams.length > 0}>
-              <span className={styles.recordContainer}>
-                <button className={styles.record} disabled={streams.length === 0} onClick={onRecordClicked}>
-                  {!isRecording
-                    ? <div><StartRecordingIcon fontSize="large" className={styles.toggleButtonIcon} />Start recording</div>
-                    : <div><StopRoundedIcon style={{ color: '#DC3A3A' }} fontSize="large" className={styles.toggleButtonIcon} />Stop recording ({recordingDuration} sec)</div>
-                  }
-                </button>
-              </span>
-            </Tooltip>
-          </Paper>
-
-          <section className={styles.previewPaper}>
-            <div id="canvas-container" className={styles.canvasContainer} style={{ width: "100%", aspectRatio: `${WIDTH}/${HEIGHT}` }}>
-              {streams.length === 0 && <><NextImage src="/video-off.svg" alt='No stream' width={48} height={48} /><p>No video stream yet</p></>}
-            </div>
-            {videoStatus && (
-              <Box className={styles.stepperContainer}>
-                <Stepper activeStep={stepNum} connector={null} className={styles.stepper}>
-
-                  <Step completed={stepNum > 0} className={styles.step}>
-                    <StepLabel style={{ fontWeight: "bold" }}>Uploading</StepLabel>
-                      <Typography variant="caption" className={styles.stepContent}>
-                        The video is currently being recorded and uploaded simultaneously thanks to api.video&apos;s <a target="_blank" rel="noreferrer" href="https://api.video/blog/tutorials/progressively-upload-large-video-files-without-compromising-on-speed">progressive upload</a> feature.
-                      </Typography>
-                  </Step>
-
-                  <Step completed={stepNum > 1} className={styles.step}>
-                    <StepLabel>Encoding</StepLabel>
-                    {
-                      stepNum > 0 &&
-                        <Typography variant="caption">Your recording is currently being encoded in HLS for optimal streaming. It will be available soon. Please wait.</Typography>
+              <h2>Tool</h2>
+              <FormControl component="fieldset">
+                <FormGroup>
+                  <ToggleButtonGroup
+                    fullWidth
+                    size="small"
+                    color="primary"
+                    value={mouseTool}
+                    className={styles.toolButtonGroup}
+                    exclusive
+                    onChange={(v, w) => {
+                      composer.setMouseTool(w);
+                      setMouseTool(w);
                     }
-                  </Step>
-
-                  <Step completed={stepNum > 1} className={styles.step}>
-                    <StepLabel>Done</StepLabel>
-                    {
-                      stepNum > 1 &&
-                        <>
-                          <Typography variant="caption">
-                            You can watch the recording <a href={playerUrl!} rel="noreferrer" target="_blank">by clicking here</a>. Higher qualities are still being processed. The viewing experience will be even better if you refresh the player in a few seconds.
-                          </Typography><br />
-                        </>
                     }
-                  </Step>
-                </Stepper>
-              </Box>
-            )}
-          </section>
+                  >
+                    <ToggleButton className={styles.toggleButton} disabled={streams.length === 0} value="move-resize">
+                      <FullscreenExitIcon className={styles.toggleButtonIcon} />
+                      Move / Resize
+                    </ToggleButton>
+                    <ToggleButton className={styles.toggleButton} disabled={streams.length === 0} value="draw">
+                      <GestureIcon className={styles.toggleButtonIcon} />
+                      Draw
+                    </ToggleButton>
+                  </ToggleButtonGroup>
+                  {mouseTool === "draw" && <>
+                    <FormLabel component="legend">Line color</FormLabel>
+                    <CirclePicker
+                      color={drawingColor}
+                      colors={['#FF6900', '#FCB900', '#9900EF', '#00D084', '#8ED1FC', '#0693E3']}
+                      onChange={(color: any) => { setDrawingColor(color.hex) }}
+                    />
+                    <FormControl variant="standard">
+                      <FormLabel component="legend">Auto erase delay</FormLabel>
+                      <Select
+                        labelId="width-select-standard-label"
+                        id="width-select-standard"
+                        value={drawingAutoEraseDelay}
+                        onChange={(v, w) => { setDrawingAutoEraseDelay(parseInt(v.target.value as string)) }}
+                        label="Auto erase delay"
+                      >
+                        <MenuItem value={0}>disabled</MenuItem>
+                        <MenuItem value={3}>3 seconds</MenuItem>
+                        <MenuItem value={5}>5 seconds</MenuItem>
+                        <MenuItem value={10}>10 seconds</MenuItem>
+                      </Select>
+                    </FormControl>
 
-          <Snackbar
-            open={firstStreamAddedAlertOpen}
-            onClose={() => setFirstStreamAddedAlertOpen(false)}
-            autoHideDuration={4000}
-            anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
-          >
-            <Alert onClose={() => setFirstStreamAddedAlertOpen(false)} severity="success" sx={{ width: '100%' }}>
-              You have added your first stream. You can now add more to create your composition!
-            </Alert>
-          </Snackbar>
-          <Snackbar
-            open={!!errorMessage}
-            onClose={() => setErrorMessage(undefined)}
-            autoHideDuration={4000}
-            anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
-          >
-            <Alert onClose={() => setErrorMessage(undefined)} severity="error" sx={{ width: '100%' }}>
-              {errorMessage}
-            </Alert>
-          </Snackbar>
+                    <Button variant="outlined" style={{ marginTop: "1em" }} onClick={() => composer.clearDrawing()}>clear drawings</Button>
 
-          <StreamDialog
-            open={addStreamDialogIsOpen}
-            devices={videoDevices}
-            onClose={() => setAddStreamDialogOpen(false)}
-            onSubmit={(values) => {
-              addStream(values);
-              setAddStreamDialogOpen(false);
-            }} />
+                  </>}
+                </FormGroup>
+              </FormControl>
 
-          <UploadSettingsDialog
-            open={uploadSettingsDialogIsOpen}
-            onClose={() => setUploadSettingsDialogOpen(false)}
-            uploadSettings={uploadSettings}
-            onSubmit={(values) => { setUploadSettings(values); setUploadSettingsDialogOpen(false) }} />
+              <SettingsIcon color='primary' onClick={() => setUploadSettingsDialogOpen(true)} className={styles.settingsButton} />
 
-        </div>
+              <Tooltip style={{ fontSize: 22 }} title={<p style={{ fontSize: 16, padding: 0, margin: 0 }}>Start by adding one or more streams by clicking on the &quot;+&quot; icon above.</p>} placement='bottom' arrow disableHoverListener={streams.length > 0}>
+                <span className={styles.recordContainer}>
+                  <button className={styles.record} disabled={streams.length === 0} onClick={onRecordClicked}>
+                    {!isRecording
+                      ? <div><StartRecordingIcon fontSize="large" className={styles.toggleButtonIcon} />Start recording</div>
+                      : <div><StopRoundedIcon style={{ color: '#DC3A3A' }} fontSize="large" className={styles.toggleButtonIcon} />Stop recording ({recordingDuration} sec)</div>
+                    }
+                  </button>
+                </span>
+              </Tooltip>
+            </Paper>
 
+            <section className={styles.previewPaper}>
+              <div id="canvas-container" className={styles.canvasContainer} style={{ width: "100%", aspectRatio: `${WIDTH}/${HEIGHT}` }}>
+                {streams.length === 0 && <><NextImage src="/video-off.svg" alt='No stream' width={48} height={48} /><p>No video stream yet</p></>}
+              </div>
+            </section>
+
+            <Snackbar
+              open={firstStreamAddedAlertOpen}
+              onClose={() => setFirstStreamAddedAlertOpen(false)}
+              autoHideDuration={4000}
+              anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+            >
+              <Alert onClose={() => setFirstStreamAddedAlertOpen(false)} severity="success" sx={{ width: '100%' }}>
+                You have added your first stream. You can now add more to create your composition!
+              </Alert>
+            </Snackbar>
+            <Snackbar
+              open={!!errorMessage}
+              onClose={() => setErrorMessage(undefined)}
+              autoHideDuration={4000}
+              anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+            >
+              <Alert onClose={() => setErrorMessage(undefined)} severity="error" sx={{ width: '100%' }}>
+                {errorMessage}
+              </Alert>
+            </Snackbar>
+
+            <StreamDialog
+              open={addStreamDialogIsOpen}
+              devices={videoDevices}
+              onClose={() => setAddStreamDialogOpen(false)}
+              onSubmit={(values) => {
+                addStream(values);
+                setAddStreamDialogOpen(false);
+              }} />
+
+            <UploadSettingsDialog
+              open={uploadSettingsDialogIsOpen}
+              onClose={() => setUploadSettingsDialogOpen(false)}
+              uploadSettings={uploadSettings}
+              onSubmit={(values) => { setUploadSettings(values); setUploadSettingsDialogOpen(false) }} />
+
+          {videoStatus && (
+                <Box className={styles.stepperContainer}>
+                  <Stepper activeStep={stepNum} connector={null} className={styles.stepper}>
+
+                    <Step completed={stepNum > 0} className={styles.step}>
+                      <StepLabel style={{ fontWeight: "bold" }}>Uploading</StepLabel>
+                        <Typography variant="caption" className={styles.stepContent}>
+                          The video is currently being recorded and uploaded simultaneously thanks to api.video&apos;s <a target="_blank" rel="noreferrer" href="https://api.video/blog/tutorials/progressively-upload-large-video-files-without-compromising-on-speed">progressive upload</a> feature.
+                        </Typography>
+                    </Step>
+
+                    <Step completed={stepNum > 1} className={styles.step}>
+                      <StepLabel>Encoding</StepLabel>
+                      {
+                        stepNum > 0 &&
+                          <Typography variant="caption">Your recording is currently being encoded in HLS for optimal streaming. It will be available soon. Please wait.</Typography>
+                      }
+                    </Step>
+
+                    <Step completed={stepNum > 1} className={styles.step}>
+                      <StepLabel>Done</StepLabel>
+                      {
+                        stepNum > 1 &&
+                          <>
+                            <Typography variant="caption">
+                              You can watch the recording <a href={playerUrl!} rel="noreferrer" target="_blank">by clicking here</a>. Higher qualities are still being processed. The viewing experience will be even better if you refresh the player in a few seconds.
+                            </Typography><br />
+                          </>
+                      }
+                    </Step>
+                  </Stepper>
+                </Box>
+              )}
+
+        </ThemeProvider>
+      </div>
+      <div className={styles.textsContainer}>
         <p>This Next.js application aims to show the features offered by the <a target="_blank" rel="noreferrer" href="https://github.com/apivideo/api.video-typescript-media-stream-composer">@api.video/media-stream-composer</a> library. </p>
         <p>The code of the application is available on GitHub here: <a target="_blank" rel="noreferrer" href="https://github.com/apivideo/api.video-typescript-media-stream-composer/tree/main/examples/record.a.video">record.a.video</a>.</p>
-      </ThemeProvider>
-    </div>
+      </div>
+    </>
   )
 }
 
 export default Home
-
-
-
-
-{/* <TableContainer className={styles.table}>
-                  <Table size="small" aria-label="simple table">
-                    <TableHead>
-                      <TableRow>
-                        <TableCell>Streams</TableCell>
-                        <TableCell align="right"></TableCell>
-                      </TableRow>
-                    </TableHead>
-                    <TableBody>
-                      {streams.map((val, index, array) => array[array.length - 1 - index]).map((stream, i) => (
-                        <TableRow
-                          key={i}
-                          sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                        >
-                          <TableCell component="th" scope="row">
-                            #{stream.id} ({stream.options.name} {stream.options.index})
-                          </TableCell>
-                          <TableCell className={styles.tableActions} align="right">
-                            <Button disabled={i === 0} onClick={() => { composer.moveUp(stream.id); setStreams(composer.getStreams()); }}><KeyboardDoubleArrowUpIcon /></Button>
-                            <Button disabled={i === streams.length - 1} onClick={() => { composer.moveDown(stream.id); setStreams(composer.getStreams()); }}><KeyboardDoubleArrowDownIcon /></Button>
-                            {stream.options.hidden
-                              ? <Button onClick={() => { composer.updateStream(stream.id, { hidden: false }); setStreams(composer.getStreams()); }}><VisibilityOnIcon></VisibilityOnIcon></Button>
-                              : <Button onClick={() => { composer.updateStream(stream.id, { hidden: true }); setStreams(composer.getStreams()); }}><VisibilityOffIcon></VisibilityOffIcon></Button>}
-
-                            <Button onClick={() => { composer.removeStream(stream.id); setStreams(composer.getStreams()); }}><DeleteIcon></DeleteIcon></Button>
-                          </TableCell>
-
-                        </TableRow>
-                      ))}
-                    </TableBody>
-                  </Table>
-                </TableContainer> */}
