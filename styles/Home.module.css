@@ -143,18 +143,22 @@
   font-size: 1rem;
   font-weight: 500;
 }
-.stream > svg {
+.stream > div[data-svg=true] {
+  display: flex;
+  align-items: center;
+}
+.stream > svg, .stream > div[data-svg=true] {
   color: #A6B5CA;
   transition: color 150ms ease-in-out;
   font-size: 20px;
 }
-.stream > svg:not(:first-of-type) {
+.stream > svg {
   cursor: pointer;
 }
-.stream > svg:not(:first-of-type):hover {
+.stream > svg:hover {
   color: #000000;
 }
-.stream > svg:nth-of-type(2) {
+.stream > svg:first-of-type {
   margin-left: auto;
   margin-right: .5rem;
 }
