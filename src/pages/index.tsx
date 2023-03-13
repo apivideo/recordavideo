@@ -378,7 +378,7 @@ const Home: NextPage = () => {
               ? (
                 <>
                   <NextImage className={styles.videoOff} src="/video-off.svg" alt='No stream' width={22} height={22} />
-                  <p className={styles.noStream}><AddIcon fontSize='small' color='primary' /> to add video streams</p>
+                  <p className={styles.noStream}><AddIcon fontSize='small' /> to add video streams</p>
                 </>
               ) : (
                 <DragDropContext onDragEnd={onDragEnd}>
