@@ -293,7 +293,7 @@ const Home: NextPage = () => {
 
         <div className={styles.columnsContainer} style={{ paddingBottom: videoStatus ? 150 : undefined }}>
 
-          <Paper className={styles.settingsPaper} elevation={4}>
+          <Paper className={styles.settingsPaper} elevation={0}>
             <div className={styles.header}><NextImage src="/logo.svg" alt="api.video logo" width={65} height={15} /></div>
             <h2>
               <p>Video streams</p>
