@@ -298,7 +298,7 @@
     position: initial;
   }
   .stepper {
-    flex-direction: column;
+    flex-direction: column !important;
     margin-top: 1rem;
   }
   .step {
