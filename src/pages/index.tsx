@@ -527,14 +527,22 @@ const Home: NextPage = () => {
 
                   <Step completed={stepNum > 1} className={styles.step}>
                     <StepLabel>Encoding</StepLabel>
-                      <Typography variant="caption">Your recording is currently being encoded in HLS for optimal streaming. It will be available soon. Please wait.</Typography>
+                    {
+                      stepNum > 0 &&
+                        <Typography variant="caption">Your recording is currently being encoded in HLS for optimal streaming. It will be available soon. Please wait.</Typography>
+                    }
                   </Step>
 
                   <Step completed={stepNum > 1} className={styles.step}>
                     <StepLabel>Done</StepLabel>
-                      <Typography variant="caption">
-                        You can watch the recording <a href={playerUrl!} rel="noreferrer" target="_blank">by clicking here</a>. Higher qualities are still being processed. The viewing experience will be even better if you refresh the player in a few seconds.
-                      </Typography><br />
+                    {
+                      stepNum > 1 &&
+                        <>
+                          <Typography variant="caption">
+                            You can watch the recording <a href={playerUrl!} rel="noreferrer" target="_blank">by clicking here</a>. Higher qualities are still being processed. The viewing experience will be even better if you refresh the player in a few seconds.
+                          </Typography><br />
+                        </>
+                    }
                   </Step>
                 </Stepper>
               </Box>
